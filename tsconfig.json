@@ -14,8 +14,13 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
+    "strict": true,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true, 
+    "paths": {
+      "@EntityNotifier": ["src/business/entityNotification"],
+    }
+    
   }
 }
