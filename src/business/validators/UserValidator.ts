@@ -12,18 +12,18 @@ export class UserValidator implements IModelValidator {
 
     if (!validationResult.success) {
       const errorDetails = validationResult.error.errors.map(
-        (error) => `${error.path.join('.')} ${error.message}`,
+        (error) => `${error.path.join('.')}: ${error.message}`,
       );
 
       return {
         isValid: false,
-        message: errorDetails[0],
+        errors: errorDetails,
       };
     }
 
     return {
       isValid: true,
-      message: '',
+      errors: [],
     };
   }
 }

@@ -12,4 +12,8 @@ export class FirebaseConfig {
       credential: admin.credential.cert(serviceAccount),
     });
   }
+
+  static verifyToken(token: string): Promise<admin.auth.DecodedIdToken> {
+    return admin.auth().verifyIdToken(token);
+  }
 }

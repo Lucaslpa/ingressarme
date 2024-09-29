@@ -1,4 +1,4 @@
 export enum ERole {
-  enterprise = 1,
-  user = 2,
+  enterprise = 'enterprise',
+  user = 'user',
 }

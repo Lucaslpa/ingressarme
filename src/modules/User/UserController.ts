@@ -9,7 +9,6 @@ export class UserController {
   @Post('/signup')
   signup(@Body() input: UserInput) {
     const response = this.signupUser.execute(input);
-
     return response;
   }
 }

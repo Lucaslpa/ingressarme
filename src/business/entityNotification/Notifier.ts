@@ -3,8 +3,16 @@ import { ENotification } from './Notification';
 export abstract class Notifier {
   protected notifications: ENotification[] = [];
 
-  protected addNotification(notification: ENotification): void {
-    this.notifications.push(notification);
+  protected addNotification(notification: ENotification): void;
+  protected addNotification(notification: ENotification[]): void;
+  protected addNotification(
+    notification: ENotification | ENotification[],
+  ): void {
+    if (Array.isArray(notification)) {
+      this.notifications.push(...notification);
+    } else {
+      this.notifications.push(notification);
+    }
   }
 
   public getNotifications(): string[] {

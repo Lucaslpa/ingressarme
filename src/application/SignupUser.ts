@@ -6,6 +6,7 @@ import { ISignupUser } from './types/ISignUpUser';
 import { UserValidator } from '../business/validators/UserValidator';
 import { Injectable } from '@nestjs/common';
 import { UserServices } from 'src/infra/services/UserServices';
+import { UserOutput } from './dto/UserOutput';
 
 @Injectable()
 export class SignupUser implements ISignupUser {
@@ -14,21 +15,33 @@ export class SignupUser implements ISignupUser {
     private readonly userServices: UserServices,
   ) {}
 
-  execute(input: UserInput): Response<UserInput> {
-    const user = new User(
-      input.id ?? '',
-      input.name,
-      input.email,
-      input.password,
-      input.role,
-    );
+  async execute(input: UserInput): Promise<Response<UserOutput>> {
+    try {
+      const user = new User(
+        input.id ?? '',
+        input.name,
+        input.email,
+        input.password,
+        input.role,
+      );
 
-    if (!user.isValid(this.userValidator)) {
-      return new Response<UserInput>(false, null, user.getNotifications());
+      if (!user.isValid(this.userValidator)) {
+        return new Response<UserInput>(false, null, user.getNotifications());
+      }
+
+      const result = await this.userServices.add(user);
+
+      const userResult = new UserOutput(
+        result.id,
+        result.name,
+        result.email,
+        result.role,
+      );
+
+      return new Response<UserOutput>(true, userResult, []);
+    } catch (error) {
+      console.log(error);
+      return new Response<UserOutput>(false, null, ['Error on user creation']);
     }
-
-    this.userServices.add(user);
-
-    return new Response<UserInput>(true, input, []);
   }
 }

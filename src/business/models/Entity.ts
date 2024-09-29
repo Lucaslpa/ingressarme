@@ -1,4 +1,4 @@
-import { Notifier } from '../../business/entityNotification';
+import { ENotification, Notifier } from '../../business/entityNotification';
 import { IModelValidator } from '../types/IModelValidator';
 
 export class Entity extends Notifier {
@@ -7,10 +7,10 @@ export class Entity extends Notifier {
   }
 
   public isValid(validator: IModelValidator) {
-    const { isValid, message } = validator.validate(this);
+    const { isValid, errors } = validator.validate(this);
 
     if (!isValid) {
-      this.addNotification({ message });
+      this.addNotification(errors.map((error) => new ENotification(error)));
     }
 
     return !this.hasNotifications();
