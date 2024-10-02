@@ -1,28 +1,12 @@
-import { IModelValidator } from '../types/IModelValidator';
 import { User } from '../models/User';
 
 import zod from 'zod';
 import { ERole } from '../types/ERole';
+import { Validator } from './Validator';
 
-export class UserValidator implements IModelValidator<User> {
-  validate(model: User) {
-    const validationResult = schema.safeParse(model);
-
-    if (!validationResult.success) {
-      const errorDetails = validationResult.error.errors.map(
-        (error) => `${error.path.join('.')}: ${error.message}`,
-      );
-
-      return {
-        isValid: false,
-        errors: errorDetails,
-      };
-    }
-
-    return {
-      isValid: true,
-      errors: [],
-    };
+export class UserValidator extends Validator<User> {
+  constructor() {
+    super(schema);
   }
 }
 

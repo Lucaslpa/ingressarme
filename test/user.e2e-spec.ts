@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { UserModule } from './../src/modules/User/UserModule';
 import { UserInput } from './../src/application/dto/UserInput';
+import { ERole } from 'src/business/types/ERole';
 
 describe('UserModule (e2e)', () => {
   let app: INestApplication;
@@ -19,15 +20,11 @@ describe('UserModule (e2e)', () => {
   it('should create a user', () => {
     const input: UserInput = {
       name: 'joão',
-      email: 'joao@gmail.com',
+      email: 'joa2323o@gmail.com',
       password: '12345',
-      role: 1,
+      role: ERole.enterprise,
       id: '',
     };
-    return request(app.getHttpServer())
-      .post('/signup')
-      .send(input)
-      .expect(200)
-      .expect('Hello World!');
+    return request(app.getHttpServer()).post('/signup').send(input).expect(201);
   });
 });
