@@ -4,7 +4,7 @@ import { User } from '../models/User';
 import zod from 'zod';
 import { ERole } from '../types/ERole';
 
-export class UserValidator implements IModelValidator {
+export class UserValidator implements IModelValidator<User> {
   validate(model: User) {
     const validationResult = schema.safeParse(model);
 

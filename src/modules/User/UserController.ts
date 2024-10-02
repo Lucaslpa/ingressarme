@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserInput } from '../../application/dto/UserInput';
-import { SignupUser } from '../../application/SignupUser';
 import { ISignupUser } from 'src/application/types/ISignUpUser';
 
 @Controller()

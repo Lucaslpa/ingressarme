@@ -6,7 +6,7 @@ export class Entity extends Notifier {
     super();
   }
 
-  public isValid(validator: IModelValidator) {
+  public isValid(validator: IModelValidator<this>) {
     const { isValid, errors } = validator.validate(this);
 
     if (!isValid) {

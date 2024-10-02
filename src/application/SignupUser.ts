@@ -11,7 +11,7 @@ import { IModelValidator } from 'src/business/types/IModelValidator';
 @Injectable()
 export class SignupUser implements ISignupUser {
   constructor(
-    private readonly userValidator: IModelValidator,
+    private readonly userValidator: IModelValidator<User>,
     private readonly userServices: IServices<User>,
   ) {}
 
