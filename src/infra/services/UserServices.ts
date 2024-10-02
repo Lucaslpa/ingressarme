@@ -13,14 +13,23 @@ export class UserServices implements IServices<User> {
         displayName: entity.name,
       })
       .catch((error: FirebaseError) => {
-        return new Error(error.message);
+        return new Error('Signup user: ' + error.message);
       });
 
     if (userRecord instanceof Error) throw userRecord;
 
-    await admin.auth().setCustomUserClaims(userRecord.uid, {
-      role: entity.role,
-    });
+    const responseClaim = await admin
+      .auth()
+      .setCustomUserClaims(userRecord.uid + 10, {
+        role: entity.role,
+      })
+      .catch((error) => {
+        return new Error(
+          'Create user claim: ' + error.message || 'Error on set custom claims',
+        );
+      });
+
+    if (responseClaim instanceof Error) throw responseClaim;
 
     const user = new User(
       userRecord.uid,
