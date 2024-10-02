@@ -1,35 +1,36 @@
 import { User } from 'src/business/models/User';
 import { IServices } from 'src/business/services/IServices';
-import admin from 'firebase-admin';
+import admin, { FirebaseError } from 'firebase-admin';
 import { Injectable } from '@nestjs/common';
-import { FirebaseError } from 'firebase-admin/lib/utils/error';
 
-@Injectable()
 export class UserServices implements IServices<User> {
   async add(entity: User): Promise<User> {
-    try {
-      const userRecord = await admin.auth().createUser({
+    const userRecord = await admin
+      .auth()
+      .createUser({
         email: entity.email,
         password: entity.password,
         displayName: entity.name,
+      })
+      .catch((error: FirebaseError) => {
+        return new Error(error.message);
       });
 
-      await admin.auth().setCustomUserClaims(userRecord.uid, {
-        role: entity.role,
-      });
+    if (userRecord instanceof Error) throw userRecord;
 
-      const user = new User(
-        userRecord.uid,
-        entity.name,
-        entity.email,
-        entity.password,
-        entity.role,
-      );
+    await admin.auth().setCustomUserClaims(userRecord.uid, {
+      role: entity.role,
+    });
 
-      return user;
-    } catch (error) {
-      throw new Error('Error on user creation');
-    }
+    const user = new User(
+      userRecord.uid,
+      entity.name,
+      entity.email,
+      entity.password,
+      entity.role,
+    );
+
+    return user;
   }
 
   async update(entity: User): Promise<User> {

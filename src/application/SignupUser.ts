@@ -40,7 +40,9 @@ export class SignupUser implements ISignupUser {
 
       return new Response<UserOutput>(true, userResult, []);
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        return new Response<UserOutput>(false, null, [error.message]);
+      }
       return new Response<UserOutput>(false, null, ['Error on user creation']);
     }
   }
