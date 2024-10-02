@@ -2,17 +2,16 @@ import { User } from '../business/models/User';
 import { Response } from './dto/Response';
 import { UserInput } from './dto/UserInput';
 
-import { ISignupUser } from './types/ISignUpUser';
+import { UserValidator } from '../business/validators/UserValidator';
 import { Injectable } from '@nestjs/common';
+import { UserServices } from 'src/infra/services/UserServices';
 import { UserOutput } from './dto/UserOutput';
-import { IServices } from 'src/business/services/IServices';
-import { IModelValidator } from 'src/business/types/IModelValidator';
 
 @Injectable()
-export class SignupUser implements ISignupUser {
+export class DeleteUser {
   constructor(
-    private readonly userValidator: IModelValidator,
-    private readonly userServices: IServices<User>,
+    private readonly userValidator: UserValidator,
+    private readonly userServices: UserServices,
   ) {}
 
   async execute(input: UserInput): Promise<Response<UserOutput>> {

@@ -1,7 +1,6 @@
 import { User } from 'src/business/models/User';
 import { IServices } from 'src/business/services/IServices';
 import admin, { FirebaseError } from 'firebase-admin';
-import { Injectable } from '@nestjs/common';
 
 export class UserServices implements IServices<User> {
   async add(entity: User): Promise<User> {

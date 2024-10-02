@@ -3,9 +3,7 @@ import { User } from '../models/User';
 
 import zod from 'zod';
 import { ERole } from '../types/ERole';
-import { Injectable } from '@nestjs/common';
 
-@Injectable()
 export class UserValidator implements IModelValidator {
   validate(model: User) {
     const validationResult = schema.safeParse(model);
