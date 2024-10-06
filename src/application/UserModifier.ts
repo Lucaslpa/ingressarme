@@ -1,11 +1,8 @@
-import { User } from '@business';
-import { Response } from './dto/Response';
-import { UserInput } from './dto/UserInput';
+import { Response, UserInput, UserOutput } from './dto';
 
 import { IUserModifier } from './interfaces/IUserModifier';
 import { Injectable } from '@nestjs/common';
-import { UserOutput } from './dto/UserOutput';
-import { IServices, IModelValidator } from '@business';
+import { User, IServices, IModelValidator } from '@business';
 
 @Injectable()
 export class UserModifier implements IUserModifier {

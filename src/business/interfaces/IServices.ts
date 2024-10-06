@@ -1,4 +1,3 @@
-import { Notifier } from '@EntityNotifier';
 import { Entity } from '../models';
 
 export abstract class IServices<T extends Entity> {

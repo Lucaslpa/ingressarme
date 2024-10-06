@@ -1,7 +1,19 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-import { UserInput, IUserModifier } from '@application';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpException,
+  Param,
+  Post,
+  Put,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
+import { UserInput, IUserModifier, Response, UserOutput } from '@application';
+import { HttpResponseInterceptor } from '../../utils/HttpResponseInterceptor';
 
-@Controller()
+@UseInterceptors(HttpResponseInterceptor)
+@Controller('user')
 export class UserController {
   constructor(private readonly userModifier: IUserModifier) {}
 
@@ -17,14 +29,12 @@ export class UserController {
     return response;
   }
 
-  @Post('/update/:id')
+  @Put('/update/:id')
   async update(@Param('id') id: string, @Body() input: UserInput) {
-    if (input.id !== id) {
-      return {
-        message: 'Id must be the same in the body and in the url',
-        satus: 400,
-      };
-    }
+    if (input.id !== id)
+      return new Response<UserOutput>(false, null, [
+        'Id from body is different from id from params',
+      ]);
 
     const response = await this.userModifier.update(input);
     return response;

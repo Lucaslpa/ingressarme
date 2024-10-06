@@ -18,7 +18,7 @@ export class UserServices implements IServices<User> {
     if (userRecord instanceof Error) throw userRecord;
     const responseClaim = await admin
       .auth()
-      .setCustomUserClaims(userRecord.uid + 10, {
+      .setCustomUserClaims(userRecord.uid, {
         role: entity.role,
       })
       .catch(
