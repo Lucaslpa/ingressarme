@@ -1,8 +1,6 @@
 import { IModelValidator } from '../types/IModelValidator';
-import { User } from '../models/User';
 
 import zod from 'zod';
-import { ERole } from '../types/ERole';
 import { Entity } from '../models/Entity';
 
 export class Validator<T extends Entity> implements IModelValidator<T> {

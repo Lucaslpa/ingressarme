@@ -3,10 +3,10 @@ import { Module } from '@nestjs/common';
 import { UserValidator } from '../../business/validators/UserValidator';
 import { UserServices } from '../../infra/services/UserServices';
 import { UserController } from './UserController';
-import { SignupUser } from '../../application/SignupUser';
+import { UserModifier } from '../../application/UserModifier';
 import { IServices } from 'src/business/services/IServices';
 import { IModelValidator } from 'src/business/types/IModelValidator';
-import { ISignupUser } from 'src/application/types/ISignUpUser';
+import { IUserModifier } from 'src/application/types/IUserModifier';
 
 @Module({
   controllers: [UserController],
@@ -20,8 +20,8 @@ import { ISignupUser } from 'src/application/types/ISignUpUser';
       useClass: UserServices,
     },
     {
-      provide: ISignupUser,
-      useClass: SignupUser,
+      provide: IUserModifier,
+      useClass: UserModifier,
     },
   ],
 })

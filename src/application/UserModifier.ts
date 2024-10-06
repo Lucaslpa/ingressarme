@@ -2,23 +2,23 @@ import { User } from '../business/models/User';
 import { Response } from './dto/Response';
 import { UserInput } from './dto/UserInput';
 
-import { ISignupUser } from './types/ISignUpUser';
+import { IUserModifier } from './types/IUserModifier';
 import { Injectable } from '@nestjs/common';
 import { UserOutput } from './dto/UserOutput';
 import { IServices } from 'src/business/services/IServices';
 import { IModelValidator } from 'src/business/types/IModelValidator';
 
 @Injectable()
-export class SignupUser implements ISignupUser {
+export class UserModifier implements IUserModifier {
   constructor(
     private readonly userValidator: IModelValidator<User>,
     private readonly userServices: IServices<User>,
   ) {}
 
-  async execute(input: UserInput): Promise<Response<UserOutput>> {
+  async create(input: UserInput): Promise<Response<UserOutput>> {
     try {
       const user = new User(
-        input.id ?? '',
+        input.id,
         input.name,
         input.email,
         input.password,
@@ -45,5 +45,38 @@ export class SignupUser implements ISignupUser {
       }
       return new Response<UserOutput>(false, null, ['Error on user creation']);
     }
+  }
+
+  async delete(id: string) {
+    await this.userServices.delete(id);
+    return new Response<{
+      userId: string;
+    }>(true, { userId: id }, []);
+  }
+
+  async update(input: UserInput): Promise<Response<UserOutput>> {
+    const user = new User(
+      input.id,
+      input.name,
+      input.email,
+      input.password,
+      input.role,
+    );
+
+    if (!user.id)
+      return new Response<UserOutput>(false, null, ['Id is required']);
+
+    const updatedUser = await this.userServices.update(user);
+
+    return new Response<UserOutput>(
+      true,
+      new UserOutput(
+        updatedUser.id,
+        updatedUser.name,
+        updatedUser.email,
+        updatedUser.role,
+      ),
+      [],
+    );
   }
 }
