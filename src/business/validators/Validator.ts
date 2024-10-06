@@ -1,4 +1,4 @@
-import { IModelValidator } from '../types/IModelValidator';
+import { IModelValidator } from '../interfaces/IModelValidator';
 
 import zod from 'zod';
 import { Entity } from '../models/Entity';

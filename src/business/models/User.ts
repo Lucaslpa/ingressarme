@@ -1,4 +1,4 @@
-import { ERole } from '../types/ERole';
+import { ERole } from '../interfaces/ERole';
 import { Entity } from './Entity';
 
 export class User extends Entity {

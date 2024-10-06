@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
-import { UserInput } from '../../application/dto/UserInput';
-import { IUserModifier } from 'src/application/types/IUserModifier';
+import { UserInput, IUserModifier } from '@application';
 
 @Controller()
 export class UserController {

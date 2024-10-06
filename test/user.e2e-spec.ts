@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { UserModule } from './../src/modules/User/UserModule';
 import { UserInput } from './../src/application/dto/UserInput';
-import { ERole } from 'src/business/types/ERole';
+import { ERole } from 'src/business/interfaces/ERole';
 
 describe('UserModule (e2e)', () => {
   let app: INestApplication;

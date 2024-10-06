@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { UserValidator } from '../../business/validators/UserValidator';
-import { UserServices } from '../../infra/services/UserServices';
+import { UserValidator, IModelValidator, IServices } from '@business';
+import { IUserModifier, UserModifier } from '@application';
+
+import { UserServices } from '@infra';
 import { UserController } from './UserController';
-import { UserModifier } from '../../application/UserModifier';
-import { IServices } from 'src/business/services/IServices';
-import { IModelValidator } from 'src/business/types/IModelValidator';
-import { IUserModifier } from 'src/application/types/IUserModifier';
 
 @Module({
   controllers: [UserController],

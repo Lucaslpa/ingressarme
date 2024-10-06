@@ -1,5 +1,5 @@
 import { ENotification, Notifier } from '../../business/entityNotification';
-import { IModelValidator } from '../types/IModelValidator';
+import { IModelValidator } from '../interfaces/IModelValidator';
 
 export class Entity extends Notifier {
   constructor() {

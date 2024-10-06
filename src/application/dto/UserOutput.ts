@@ -1,4 +1,4 @@
-import { ERole } from 'src/business/types/ERole';
+import { ERole } from 'src/business/interfaces/ERole';
 
 export class UserOutput {
   constructor(

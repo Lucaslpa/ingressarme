@@ -20,7 +20,11 @@
     "noFallthroughCasesInSwitch": true, 
     "paths": {
       "@EntityNotifier": ["src/business/entityNotification"],
-    }
+      "@business": ["src/business"],
+      "@application": ["src/application"],
+      "@infra": ["src/infra"],
+    },
+    
     
   }
 }

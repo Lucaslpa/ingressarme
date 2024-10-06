@@ -1,7 +1,7 @@
 import { User } from '../models/User';
 
 import zod from 'zod';
-import { ERole } from '../types/ERole';
+import { ERole } from '../interfaces/ERole';
 import { Validator } from './Validator';
 
 export class UserValidator extends Validator<User> {
