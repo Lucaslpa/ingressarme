@@ -31,6 +31,20 @@ describe('UserModule (e2e)', () => {
     await app.close();
   });
 
+  it('should fail to create a user with the wrong email', async () => {
+    const input: UserInput = {
+      name: 'joão',
+      email: 'joa2323o@',
+      password: '12345',
+      role: ERole.enterprise,
+      id: '',
+    };
+    const response = await request(app.getHttpServer())
+      .post('/user/signup')
+      .send(input);
+    expect(response.status).toBe(400);
+  });
+
   it('should create a user', async () => {
     const input: UserInput = {
       name: 'joaozinho',
@@ -50,20 +64,6 @@ describe('UserModule (e2e)', () => {
     const input: UserInput = {
       name: 'joão',
       email: 'joa2323o@gmail.com',
-      password: '12345',
-      role: ERole.enterprise,
-      id: '',
-    };
-    const response = await request(app.getHttpServer())
-      .post('/user/signup')
-      .send(input);
-    expect(response.status).toBe(400);
-  });
-
-  it('should fail to create a user with the wrong email', async () => {
-    const input: UserInput = {
-      name: 'joão',
-      email: 'joa2323o@',
       password: '12345',
       role: ERole.enterprise,
       id: '',
