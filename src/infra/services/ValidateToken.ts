@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
-import { IValidateToken } from '../interfaces/IValidateToken';
+import { ITokenIsValid } from '../interfaces/IValidateToken';
 
-export class ValidateToken implements IValidateToken {
+export class TokenIsValid implements ITokenIsValid {
   public async execute(token: string): Promise<boolean> {
     try {
       await admin.auth().verifyIdToken(token);

@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserInput, IUserModifier, Response, UserOutput } from '@application';
 import { HttpResponseInterceptor } from '../../utils/HttpResponseInterceptor';
+import { IsAuthenticatedInterceptor } from '../../utils/IsAuthenticatedInterceptor';
 
 @UseInterceptors(HttpResponseInterceptor)
 @Controller('user')
@@ -23,12 +24,14 @@ export class UserController {
     return response;
   }
 
+  @UseInterceptors(IsAuthenticatedInterceptor)
   @Delete('/exclude/:id')
   async exlude(@Param('id') id: string) {
     const response = await this.userModifier.delete(id);
     return response;
   }
 
+  @UseInterceptors(IsAuthenticatedInterceptor)
   @Put('/update/:id')
   async update(@Param('id') id: string, @Body() input: UserInput) {
     if (input.id !== id)

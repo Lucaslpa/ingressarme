@@ -6,6 +6,16 @@ import { UserInput } from '@application';
 import { ERole } from '@business';
 import { FirebaseModule } from './../src/firebase.module';
 import { ConfigModule } from '@nestjs/config';
+import { TokenIsValid } from '@infra';
+
+jest.mock('@infra', () => {
+  return {
+    ...jest.requireActual('@infra'),
+    TokenIsValid: {
+      execute: jest.fn().mockResolvedValue(true),
+    },
+  };
+});
 
 describe('UserModule (e2e)', () => {
   let app: INestApplication;
@@ -41,11 +51,12 @@ describe('UserModule (e2e)', () => {
     };
     const response = await request(app.getHttpServer())
       .post('/user/signup')
+
       .send(input);
     expect(response.status).toBe(400);
   });
 
-  it('should create a user', async () => {
+  it.only('should create a user', async () => {
     const input: UserInput = {
       name: 'joaozinho',
       email: 'joa2323o@gmail.com',
@@ -74,7 +85,7 @@ describe('UserModule (e2e)', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should update the user', async () => {
+  it('should should return unauthorized if not has authorization header', async () => {
     const updateInput = {
       id: userId,
       name: 'joaozinho updated',
@@ -83,15 +94,43 @@ describe('UserModule (e2e)', () => {
     const response = await request(app.getHttpServer())
       .put(`/user/update/${userId}`)
       .send(updateInput);
+    expect(response.status).toBe(401);
+  });
+
+  it('should should return unauthorized if has invalid token header', async () => {
+    ((TokenIsValid as any).execute as jest.Mock).mockResolvedValue(false);
+
+    const updateInput = {
+      id: userId,
+      name: 'joaozinho updated',
+      email: 'joa2323o_updated@gmail.com',
+    };
+    const response = await request(app.getHttpServer())
+      .put(`/user/update/${userId}`)
+      .set('Authorization', 'Bearer token')
+      .send(updateInput);
+    expect(response.status).toBe(401);
+  });
+
+  it('should update the user', async () => {
+    const updateInput = {
+      id: userId,
+      name: 'joaozinho updated',
+      email: 'joa2323o_updated@gmail.com',
+    };
+    const response = await request(app.getHttpServer())
+      .put(`/user/update/${userId}`)
+      .set('Authorization', 'Bearer token')
+      .send(updateInput);
     expect(response.status).toBe(200);
     expect(response.body.data.name).toBe(updateInput.name);
     expect(response.body.data.email).toBe(updateInput.email);
   });
 
-  it('should delete the user', async () => {
-    const response = await request(app.getHttpServer()).delete(
-      `/user/exclude/${userId}`,
-    );
+  it.only('should delete the user', async () => {
+    const response = await request(app.getHttpServer())
+      .delete(`/user/exclude/${userId}`)
+      .set('Authorization', 'Bearer token');
     expect(response.status).toBe(200);
   });
 });

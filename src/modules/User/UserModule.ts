@@ -3,13 +3,16 @@ import { Module } from '@nestjs/common';
 import { UserValidator, IModelValidator, IServices } from '@business';
 import { IUserModifier, UserModifier } from '@application';
 
-import { UserServices, ValidateToken } from '@infra';
+import { ITokenIsValid, UserServices, TokenIsValid } from '@infra';
 import { UserController } from './UserController';
 
 @Module({
   controllers: [UserController],
   providers: [
-    ValidateToken,
+    {
+      provide: ITokenIsValid,
+      useValue: TokenIsValid,
+    },
     {
       provide: IModelValidator,
       useClass: UserValidator,
