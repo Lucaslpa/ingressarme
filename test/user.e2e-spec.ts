@@ -56,7 +56,7 @@ describe('UserModule (e2e)', () => {
     expect(response.status).toBe(400);
   });
 
-  it.only('should create a user', async () => {
+  it('should create a user', async () => {
     const input: UserInput = {
       name: 'joaozinho',
       email: 'joa2323o@gmail.com',
@@ -113,6 +113,8 @@ describe('UserModule (e2e)', () => {
   });
 
   it('should update the user', async () => {
+    ((TokenIsValid as any).execute as jest.Mock).mockResolvedValue(true);
+
     const updateInput = {
       id: userId,
       name: 'joaozinho updated',
@@ -127,7 +129,9 @@ describe('UserModule (e2e)', () => {
     expect(response.body.data.email).toBe(updateInput.email);
   });
 
-  it.only('should delete the user', async () => {
+  it('should delete the user', async () => {
+    ((TokenIsValid as any).execute as jest.Mock).mockResolvedValue(true);
+
     const response = await request(app.getHttpServer())
       .delete(`/user/exclude/${userId}`)
       .set('Authorization', 'Bearer token');
