@@ -2,13 +2,14 @@ import { Response, UserInput, UserOutput } from './dto';
 
 import { IUserModifier } from './interfaces/IUserModifier';
 import { Injectable } from '@nestjs/common';
-import { User, IServices, IModelValidator } from '@business';
+import { User, IServices, IModelValidator, Notifications } from '@business';
 
 @Injectable()
 export class UserModifier implements IUserModifier {
   constructor(
     private readonly userValidator: IModelValidator<User>,
     private readonly userServices: IServices<User>,
+    protected readonly notifications: Notifications,
   ) {}
 
   async create(input: UserInput): Promise<Response<UserOutput>> {
@@ -19,9 +20,10 @@ export class UserModifier implements IUserModifier {
         input.email,
         input.password,
         input.role,
+        this.notifications,
       );
       if (!user.isValid(this.userValidator)) {
-        return new Response<UserInput>(false, null, user.getNotifications());
+        return new Response<UserInput>(false, null, user.getNotifications);
       }
       const result = await this.userServices.add(user);
       const userResult = new UserOutput(
@@ -32,6 +34,7 @@ export class UserModifier implements IUserModifier {
       );
       return new Response<UserOutput>(true, userResult, []);
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         return new Response<UserOutput>(false, null, [error.message]);
       }
@@ -65,6 +68,7 @@ export class UserModifier implements IUserModifier {
         input.email,
         input.password,
         input.role,
+        this.notifications,
       );
       if (!user.id)
         return new Response<UserOutput>(false, null, ['Id is required']);

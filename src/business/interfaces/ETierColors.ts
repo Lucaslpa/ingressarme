@@ -1,0 +1,16 @@
+export enum ETiersColors {
+  free = 'blue',
+  standard = 'green',
+  premium = 'orange',
+  vip = 'purple',
+  platinum = 'gold',
+  diamond = 'silver',
+  titanium = 'gray',
+  elite = 'red',
+  exclusive = 'black',
+  limited = 'yellow',
+  special = 'pink',
+  deluxe = 'brown',
+  ultimate = 'cyan',
+  supreme = 'magenta',
+}

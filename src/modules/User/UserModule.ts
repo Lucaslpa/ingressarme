@@ -1,6 +1,11 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 
-import { UserValidator, IModelValidator, IServices } from '@business';
+import {
+  UserValidator,
+  IModelValidator,
+  IServices,
+  Notifications,
+} from '@business';
 import { IUserModifier, UserModifier } from '@application';
 
 import { ITokenIsValid, UserServices, TokenIsValid } from '@infra';
@@ -9,6 +14,11 @@ import { UserController } from './UserController';
 @Module({
   controllers: [UserController],
   providers: [
+    {
+      provide: Notifications,
+      useClass: Notifications,
+      scope: Scope.REQUEST,
+    },
     {
       provide: ITokenIsValid,
       useValue: TokenIsValid,

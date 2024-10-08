@@ -1,14 +1,10 @@
 import { Notifications } from '../entityNotification/Notifications';
-import { ERole } from '../interfaces/ERole';
 import { Entity } from './Entity';
 
-export class User extends Entity {
+export class Tier extends Entity {
   constructor(
     public readonly id: string,
     public readonly name: string,
-    public readonly email: string,
-    public readonly password: string,
-    public readonly role: ERole,
     protected notifications: Notifications,
   ) {
     super(notifications);

@@ -43,17 +43,18 @@ describe('UserModule (e2e)', () => {
 
   it('should fail to create a user with the wrong email', async () => {
     const input: UserInput = {
-      name: 'joão',
+      name: 'joãooo',
       email: 'joa2323o@',
-      password: '12345',
+      password: '1234567645',
       role: ERole.enterprise,
       id: '',
     };
     const response = await request(app.getHttpServer())
       .post('/user/signup')
-
       .send(input);
     expect(response.status).toBe(400);
+    expect(response.body.isSuccess).toBeFalsy();
+    expect(response.body.errors).toEqual(['email: Invalid email format']);
   });
 
   it('should create a user', async () => {
@@ -67,6 +68,8 @@ describe('UserModule (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/user/signup')
       .send(input);
+
+    console.log(response.body);
     expect(response.status).toBe(200);
     userId = response.body.data.id;
   });
@@ -82,6 +85,8 @@ describe('UserModule (e2e)', () => {
     const response = await request(app.getHttpServer())
       .post('/user/signup')
       .send(input);
+    console.log('error', response.body);
+
     expect(response.status).toBe(400);
   });
 
@@ -124,6 +129,7 @@ describe('UserModule (e2e)', () => {
       .put(`/user/update/${userId}`)
       .set('Authorization', 'Bearer token')
       .send(updateInput);
+
     expect(response.status).toBe(200);
     expect(response.body.data.name).toBe(updateInput.name);
     expect(response.body.data.email).toBe(updateInput.email);

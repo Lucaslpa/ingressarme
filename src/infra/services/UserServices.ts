@@ -1,4 +1,4 @@
-import { User, IServices } from '@business';
+import { User, IServices, Notifications } from '@business';
 import admin, { FirebaseError } from 'firebase-admin';
 
 export class UserServices implements IServices<User> {
@@ -35,6 +35,7 @@ export class UserServices implements IServices<User> {
       entity.email,
       entity.password,
       entity.role,
+      new Notifications(),
     );
     return user;
   }
@@ -60,6 +61,7 @@ export class UserServices implements IServices<User> {
       entity.email,
       entity.password,
       entity.role,
+      new Notifications(),
     );
     return user;
   }
