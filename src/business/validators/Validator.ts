@@ -3,8 +3,12 @@ import { IModelValidator } from '../interfaces/IModelValidator';
 import zod from 'zod';
 import { Entity } from '../models/Entity';
 
-export class Validator<T extends Entity> implements IModelValidator<T> {
-  constructor(private readonly schema: zod.ZodObject<any>) {}
+export class Validator<T extends Entity<T>> implements IModelValidator<T> {
+  constructor(
+    private readonly schema:
+      | zod.ZodObject<any>
+      | zod.ZodEffects<zod.ZodObject<any>>,
+  ) {}
 
   validate(model: T) {
     const validationResult = this.schema.safeParse(model);

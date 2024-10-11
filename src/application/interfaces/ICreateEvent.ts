@@ -1,8 +1,7 @@
+import { CreateEventInput } from '../dto/CreateEventInput';
+import { Response } from '../dto';
 export abstract class ICreateEvent {
   abstract execute(
-    name: string,
-    description: string,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<void>;
+    input: CreateEventInput,
+  ): Promise<Response<{ eventId: string }>>;
 }

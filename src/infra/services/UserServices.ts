@@ -30,7 +30,6 @@ export class UserServices implements IServices<User> {
       );
     if (responseClaim instanceof Error) throw responseClaim;
     const user = new User(
-      userRecord.uid,
       entity.name,
       entity.email,
       entity.password,
@@ -56,7 +55,6 @@ export class UserServices implements IServices<User> {
       );
     if (userRecord instanceof Error) throw userRecord;
     const user = new User(
-      userRecord.uid,
       entity.name,
       entity.email,
       entity.password,
@@ -75,5 +73,24 @@ export class UserServices implements IServices<User> {
           new Error('Delete user: ' + error.message || 'Error on delete user'),
       );
     if (deleteUser instanceof Error) throw deleteUser;
+  }
+
+  async getById(id: string): Promise<User> {
+    const userRecord = await admin
+      .auth()
+      .getUser(id)
+      .catch(
+        (error: FirebaseError) =>
+          new Error('Get user: ' + error.message || 'Error on get user data'),
+      );
+    if (userRecord instanceof Error) throw userRecord;
+    const user = new User(
+      userRecord.displayName || '',
+      userRecord.email || '',
+      '',
+      userRecord.customClaims?.role || 'user',
+      new Notifications(),
+    );
+    return user;
   }
 }

@@ -1,19 +1,21 @@
 import { ENotification } from '../entityNotification';
 import { Notifications } from '../entityNotification/Notifications';
 import { IModelValidator } from '../interfaces';
+import { Categorie } from './Categorie';
 import { Duration } from './Duration';
 import { Entity } from './Entity';
 import { Localization } from './Localization';
+import { Ticket } from './Ticket';
 
-export class MEvent extends Entity {
+export class MEvent extends Entity<MEvent> {
+  public readonly tickets: Ticket[] = [];
+
   constructor(
-    public readonly id: string,
     public readonly name: string,
     public readonly description: string,
     public readonly date: Duration,
+    public readonly categoriesIds: string[] = [],
     public readonly localization: Localization,
-    public readonly tickets: number,
-    public readonly categoriesIds: string[],
     public readonly iconImg: string,
     public readonly bannerImg: string,
     public readonly userId: string,
@@ -22,15 +24,15 @@ export class MEvent extends Entity {
     super(notifications);
   }
 
-  public isValid(validator: IModelValidator<this>): boolean {
-    const { isValid, errors } = validator.validate(this);
-    this.date.isValid();
-    this.localization.isValid();
+  setTickets(tickets: Ticket[]) {
+    this.tickets.push(...tickets);
+  }
 
-    if (!isValid) {
-      this.addNotifications(errors.map((error) => new ENotification(error)));
-    }
+  setTicket(ticket: Ticket) {
+    this.tickets.push(ticket);
+  }
 
-    return !this.hasNotifications();
+  get ticketQuantity(): number {
+    return this.tickets.reduce((acc, ticket) => acc + ticket.quantity, 0);
   }
 }

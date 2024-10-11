@@ -15,7 +15,6 @@ export class UserModifier implements IUserModifier {
   async create(input: UserInput): Promise<Response<UserOutput>> {
     try {
       const user = new User(
-        input.id,
         input.name,
         input.email,
         input.password,
@@ -63,7 +62,6 @@ export class UserModifier implements IUserModifier {
   async update(input: UserInput): Promise<Response<UserOutput>> {
     try {
       const user = new User(
-        input.id,
         input.name,
         input.email,
         input.password,

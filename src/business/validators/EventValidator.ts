@@ -18,7 +18,6 @@ const schema = zod
       .string()
       .min(50, 'Description must be at least 50 characters long')
       .max(800, 'Description must be at most 800 characters long'),
-    ticketQuantity: zod.number().min(10, 'Ticket quantity must be at least 10'),
     categoriesIds: zod
       .array(zod.string())
       .min(1, 'At least one category must be informed'),

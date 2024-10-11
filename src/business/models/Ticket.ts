@@ -1,29 +1,18 @@
 import { Notifications } from '../entityNotification/Notifications';
-import { ETicketTier } from '../interfaces/ETicketTiers';
-import { ETiersColors } from '../interfaces/ETierColors';
+import { IModelValidator } from '../interfaces';
 import { Entity } from './Entity';
+import { Tier } from './Tier';
 
-export class Ticket extends Entity {
-  private _color: ETiersColors = ETiersColors[ETicketTier.free];
-
+export class Ticket extends Entity<Ticket> {
   constructor(
-    public readonly id: string,
     public readonly description: string,
     public readonly price: number,
-    public readonly tier: ETicketTier,
     public readonly quantity: number,
     public readonly eventId: string,
+    public readonly tierId: string,
     protected notifications: Notifications,
+    protected ticketValidator: IModelValidator<Ticket>,
   ) {
-    super(notifications);
-    this.setColor();
-  }
-
-  public get color(): ETiersColors {
-    return this._color;
-  }
-
-  public setColor(): void {
-    this._color = ETiersColors[this.tier];
+    super(notifications, ticketValidator);
   }
 }
