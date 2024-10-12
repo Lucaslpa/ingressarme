@@ -21,7 +21,7 @@ export abstract class Notifier {
     return this.notifications.getNotificationsEntities;
   }
 
-  public hasNotifications(): boolean {
+  public get hasNotifications(): boolean {
     return this.notifications.hasNotifications;
   }
 }

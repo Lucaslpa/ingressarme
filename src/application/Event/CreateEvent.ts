@@ -58,14 +58,13 @@ export class CreateEvent extends ICreateEvent {
       this.notifications,
       this.localizationValidator,
     );
-    console.log(localization);
+
     const duration = new Duration(
       new Date(startDate),
       new Date(endDate),
       this.notifications,
       this.durationValidator,
     );
-    console.log(duration);
     const event = new MEvent(
       name,
       description,
@@ -77,7 +76,6 @@ export class CreateEvent extends ICreateEvent {
       userId,
       this.notifications,
     );
-    console.log(event);
     const tickets = ticketInfos.map(
       (info) =>
         new Ticket(
@@ -90,15 +88,10 @@ export class CreateEvent extends ICreateEvent {
           this.ticketValidator,
         ),
     );
-    console.log(tickets);
+
     event.setTickets(tickets);
 
-    if (
-      (!localization.isValid() ||
-        !duration.isValid() ||
-        event.isValid(this.eventValidator),
-      !tickets.every((ticket) => ticket.isValid()))
-    ) {
+    if (!event.isValid(this.eventValidator)) {
       return new Response<{ eventId: string }>(
         false,
         null,

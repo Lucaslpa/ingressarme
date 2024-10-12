@@ -14,7 +14,6 @@ export class Entity<T extends Entity<T>> extends Notifier {
 
   public isValid(validator: IModelValidator<T>): boolean;
   public isValid(): boolean;
-
   public isValid(validator?: IModelValidator<T>): boolean {
     const effectiveValidator = validator || this.validator;
 

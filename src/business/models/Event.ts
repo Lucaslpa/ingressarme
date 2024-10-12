@@ -35,4 +35,27 @@ export class MEvent extends Entity<MEvent> {
   get ticketQuantity(): number {
     return this.tickets.reduce((acc, ticket) => acc + ticket.quantity, 0);
   }
+
+  public isValid(validator?: IModelValidator<MEvent>): boolean {
+    const effectiveValidator = validator;
+
+    if (!effectiveValidator) {
+      this.notifications.push(new ENotification('Validator not found'));
+      return false;
+    }
+
+    const { isValid, errors } = effectiveValidator.validate(this);
+
+    this.localization.isValid();
+    this.date.isValid();
+    this.tickets.every((ticket) => ticket.isValid());
+
+    if (!isValid) {
+      this.notifications.pushNotifations(
+        errors.map((error) => new ENotification(error)),
+      );
+    }
+
+    return !this.notifications.hasNotifications;
+  }
 }
