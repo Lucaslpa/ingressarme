@@ -14,12 +14,14 @@ import { CreateEvent } from '../Event';
 
 describe('CreateEvent', () => {
   it('should create a event with success', async () => {
-    const endDate = new Date(new Date().setDate(new Date().getDate() + 1));
+    const startDate = new Date(new Date().setDate(new Date().getDate() + 1));
+    const endDate = new Date(new Date().setDate(new Date().getDate() + 2));
+
     const input: CreateEventInput = {
       name: 'Event Test',
       description:
         'Event Test Description Event Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test Description',
-      startDate: new Date().toISOString(),
+      startDate: startDate.toISOString(),
       endDate: endDate.toISOString(),
       address: 'Event Test Adress',
       longitude: 0,

@@ -1,5 +1,4 @@
 import {
-  Categorie,
   Duration,
   IModelValidator,
   IServices,
@@ -7,7 +6,6 @@ import {
   MEvent,
   Notifications,
   Ticket,
-  Tier,
   User,
 } from '@business';
 import { CreateEventInput } from '../dto/CreateEventInput';
@@ -60,8 +58,8 @@ export class CreateEvent extends ICreateEvent {
     );
 
     const duration = new Duration(
-      new Date(startDate),
-      new Date(endDate),
+      startDate,
+      endDate,
       this.notifications,
       this.durationValidator,
     );
