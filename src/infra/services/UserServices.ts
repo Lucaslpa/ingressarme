@@ -2,6 +2,9 @@ import { User, IServices, Notifications } from '@business';
 import admin, { FirebaseError } from 'firebase-admin';
 
 export class UserServices implements IServices<User> {
+  getAll(): Promise<User[]> {
+    throw new Error('Method not implemented.');
+  }
   async add(entity: User): Promise<User> {
     const userRecord = await admin
       .auth()
@@ -35,6 +38,7 @@ export class UserServices implements IServices<User> {
       entity.password,
       entity.role,
       new Notifications(),
+      userRecord.uid,
     );
     return user;
   }
@@ -90,6 +94,7 @@ export class UserServices implements IServices<User> {
       '',
       userRecord.customClaims?.role || 'user',
       new Notifications(),
+      userRecord.uid,
     );
     return user;
   }

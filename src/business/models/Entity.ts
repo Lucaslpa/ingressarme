@@ -4,12 +4,12 @@ import { Notifications } from '../entityNotification/Notifications';
 import { IModelValidator } from '../interfaces/IModelValidator';
 
 export class Entity<T extends Entity<T>> extends Notifier {
-  public id: UUID;
+  public id: string;
 
   constructor(
     protected readonly notifications: Notifications,
     private readonly validator?: IModelValidator<T>,
-    protected readonly _id?: UUID,
+    protected readonly _id?: string,
   ) {
     super(notifications);
     this.id = _id ? _id : randomUUID();

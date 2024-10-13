@@ -1,4 +1,3 @@
-
 import { CategorieModifierInput } from '../dto';
 import { CategorieModifier } from '../Event/CategorieModifier';
 import { servicesEventStub } from './stubs/servicesEventStub';

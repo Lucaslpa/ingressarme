@@ -67,10 +67,34 @@ export class UserModifier implements IUserModifier {
         input.password,
         input.role,
         this.notifications,
+        input.id,
       );
       if (!user.id)
-        return new Response<UserOutput>(false, null, ['Id is required']);
-      const updatedUser = await this.userServices.update(user);
+        return new Response<UserOutput>(false, null, [
+          'id from user is required',
+        ]);
+
+      const oldUser = await this.userServices.getById(user.id);
+
+      if (!oldUser) {
+        return new Response<UserOutput>(false, null, ['User not found']);
+      }
+      console.log('oldUser', oldUser);
+      const newUser = new User(
+        user.name || oldUser.name,
+        user.email || oldUser.email,
+        user.password || oldUser.password || '12345678',
+        oldUser.role,
+        this.notifications,
+        oldUser.id,
+      );
+
+      if (!newUser.isValid(this.userValidator)) {
+        return new Response<UserOutput>(false, null, newUser.getNotifications);
+      }
+
+      const updatedUser = await this.userServices.update(newUser);
+
       return new Response<UserOutput>(
         true,
         new UserOutput(

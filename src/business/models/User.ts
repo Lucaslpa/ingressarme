@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { Notifications } from '../entityNotification/Notifications';
 import { ERole } from '../interfaces/ERole';
 import { Entity } from './Entity';
@@ -9,7 +10,8 @@ export class User extends Entity<User> {
     public readonly password: string,
     public readonly role: ERole,
     protected notifications: Notifications,
+    protected readonly _id?: string,
   ) {
-    super(notifications);
+    super(notifications, undefined, _id);
   }
 }

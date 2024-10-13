@@ -135,12 +135,30 @@ describe('UserModule (e2e)', () => {
     expect(response.body.data.email).toBe(updateInput.email);
   });
 
+  it('should fail update the user when pass a invalid input', async () => {
+    ((TokenIsValid as any).execute as jest.Mock).mockResolvedValue(true);
+
+    const updateInput = {
+      id: userId,
+      name: 'joaozinho updated',
+      email: 'joa2323o_updated',
+    };
+    const response = await request(app.getHttpServer())
+      .put(`/user/update/${userId}`)
+      .set('Authorization', 'Bearer token')
+      .send(updateInput);
+    console.log(response.body);
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toEqual(['email: Invalid email format']);
+  });
+
   it('should delete the user', async () => {
     ((TokenIsValid as any).execute as jest.Mock).mockResolvedValue(true);
 
     const response = await request(app.getHttpServer())
       .delete(`/user/exclude/${userId}`)
       .set('Authorization', 'Bearer token');
+    console.log(response.body);
     expect(response.status).toBe(200);
   });
 });
