@@ -7,10 +7,14 @@ import {
   Notifications,
   User,
   LocalizationValidator,
-  TickedValidator,
+  TicketValidator,
 } from '@business';
 import { CreateEventInput } from '../dto/CreateEventInput';
 import { CreateEvent } from '../Event';
+import { servicesTicketStub } from './stubs/servicesTicketStub';
+import { servicesCategoriesStub } from './stubs/servicesCategoriesStub';
+import { servicesEventStub } from './stubs/servicesEventStub';
+import { servicesUserStub } from './stubs/servicesUserStub';
 
 describe('CreateEvent', () => {
   it('should create a event with success', async () => {
@@ -32,53 +36,25 @@ describe('CreateEvent', () => {
           price: 10,
           description: 'Event Test Ticket',
           tierId: '1',
+          currency: 'BRL',
         },
       ],
-      categoriesIds: ['1', '5'],
+      categoriesIds: ['1', '2'],
       iconImg: 'httpt://icon.com/icon.png',
       bannerImg: 'httpt://banner.com/banner.png',
       userId: '1',
     };
 
-    const eventServices: IServices<MEvent> = {
-      getById: jest.fn().mockReturnValue({
-        id: '1',
-        name: 'User Test',
-      }),
-      add: async function (entity: MEvent): Promise<MEvent> {
-        return entity;
-      },
-      update: async function (entity: MEvent): Promise<MEvent> {
-        return entity;
-      },
-      delete: function (id: string): Promise<void> {
-        return Promise.resolve();
-      },
-    };
-
-    const userServices: IServices<User> = {
-      add: function (entity: User): Promise<User> {
-        return Promise.resolve(entity);
-      },
-      update: function (entity: User): Promise<User> {
-        return Promise.resolve(entity);
-      },
-      delete: function (id: string): Promise<void> {
-        return Promise.resolve();
-      },
-      getById: function (id: string): Promise<User> {
-        return Promise.resolve({} as User);
-      },
-    };
-
     const notifications = new Notifications();
 
     const event = new CreateEvent(
-      eventServices,
-      userServices,
+      servicesEventStub,
+      servicesCategoriesStub,
+      servicesTicketStub,
+      servicesUserStub,
       notifications,
       new EventValidator(),
-      new TickedValidator(),
+      new TicketValidator(),
       new LocalizationValidator(),
       new DurationValidator(),
     );
@@ -90,7 +66,7 @@ describe('CreateEvent', () => {
     });
   });
 
-  it('should failure when as a invalid start date', async () => {
+  it('should fail when given an invalid start date', async () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
@@ -110,9 +86,10 @@ describe('CreateEvent', () => {
           price: 10,
           description: 'Event Test Ticket',
           tierId: '1',
+          currency: 'BRL',
         },
       ],
-      categoriesIds: ['1', '5'],
+      categoriesIds: ['1', '2'],
       iconImg: 'httpt://icon.com/icon.png',
       bannerImg: 'httpt://banner.com/banner.png',
       userId: '1',
@@ -132,6 +109,9 @@ describe('CreateEvent', () => {
       delete: function (id: string): Promise<void> {
         return Promise.resolve();
       },
+      getAll: function (): Promise<MEvent[]> {
+        throw new Error('Function not implemented.');
+      },
     };
 
     const userServices: IServices<User> = {
@@ -147,16 +127,21 @@ describe('CreateEvent', () => {
       getById: function (id: string): Promise<User> {
         return Promise.resolve({} as User);
       },
+      getAll: function (): Promise<User[]> {
+        throw new Error('Function not implemented.');
+      },
     };
 
     const notifications = new Notifications();
 
     const event = new CreateEvent(
       eventServices,
+      servicesCategoriesStub,
+      servicesTicketStub,
       userServices,
       notifications,
       new EventValidator(),
-      new TickedValidator(),
+      new TicketValidator(),
       new LocalizationValidator(),
       new DurationValidator(),
     );

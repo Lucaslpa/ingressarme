@@ -1,4 +1,5 @@
 import {
+  Categorie,
   Duration,
   IModelValidator,
   IServices,
@@ -15,6 +16,8 @@ import { Response } from '../dto';
 export class CreateEvent extends ICreateEvent {
   constructor(
     private readonly eventServices: IServices<MEvent>,
+    private readonly categorieServices: IServices<Categorie>,
+    private readonly ticketServices: IServices<Ticket>,
     private readonly userServices: IServices<User>,
     private readonly notifications: Notifications,
     private readonly eventValidator: IModelValidator<MEvent>,
@@ -86,6 +89,7 @@ export class CreateEvent extends ICreateEvent {
             info.quantity,
             event.id,
             info.tierId,
+            info.currency,
             this.notifications,
             this.ticketValidator,
           ),
@@ -101,6 +105,27 @@ export class CreateEvent extends ICreateEvent {
         );
       }
 
+      const areTiersValid = (await this.ticketServices.getAll()).every(
+        (ticket) =>
+          ticketInfos.map((info) => info.tierId).includes(ticket.tierId),
+      );
+
+      if (!areTiersValid) {
+        return new Response<{ eventId: string }>(false, null, [
+          'Tier from some ticket not exist',
+        ]);
+      }
+
+      const areCategoriesValid = (await this.categorieServices.getAll()).every(
+        (categorie) => categoriesIds.includes(categorie.id),
+      );
+
+      if (!areCategoriesValid) {
+        return new Response<{ eventId: string }>(false, null, [
+          'Some categorie not exist',
+        ]);
+      }
+
       const eventResult = await this.eventServices.add(event);
 
       return new Response<{ eventId: string }>(
@@ -109,6 +134,7 @@ export class CreateEvent extends ICreateEvent {
         [],
       );
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         return new Response<{ eventId: string }>(false, null, [error.message]);
       }

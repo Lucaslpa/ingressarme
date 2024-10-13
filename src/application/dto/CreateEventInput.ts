@@ -12,6 +12,7 @@ export class CreateEventInput {
       price: number;
       description: string;
       tierId: string;
+      currency: string;
     }[],
     public readonly iconImg: string,
     public readonly bannerImg: string,

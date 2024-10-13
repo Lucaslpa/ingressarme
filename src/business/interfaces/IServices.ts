@@ -5,4 +5,5 @@ export abstract class IServices<T extends Entity<T>> {
   abstract update(entity: T): Promise<T>;
   abstract delete(id: string): Promise<void>;
   abstract getById(id: string): Promise<T>;
+  abstract getAll(): Promise<T[]>;
 }

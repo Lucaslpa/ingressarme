@@ -1,7 +1,7 @@
+import { UUID } from 'node:crypto';
 import { Notifications } from '../entityNotification/Notifications';
 import { IModelValidator } from '../interfaces';
 import { Entity } from './Entity';
-import { Tier } from './Tier';
 
 export class Ticket extends Entity<Ticket> {
   constructor(
@@ -10,9 +10,11 @@ export class Ticket extends Entity<Ticket> {
     public readonly quantity: number,
     public readonly eventId: string,
     public readonly tierId: string,
+    public readonly currency: string,
     protected notifications: Notifications,
     protected ticketValidator: IModelValidator<Ticket>,
+    protected readonly _id?: UUID,
   ) {
-    super(notifications, ticketValidator);
+    super(notifications, ticketValidator, _id);
   }
 }
