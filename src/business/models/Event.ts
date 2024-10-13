@@ -1,3 +1,4 @@
+import { UUID } from 'node:crypto';
 import { ENotification } from '../entityNotification';
 import { Notifications } from '../entityNotification/Notifications';
 import { IModelValidator } from '../interfaces';
@@ -20,8 +21,9 @@ export class MEvent extends Entity<MEvent> {
     public readonly bannerImg: string,
     public readonly userId: string,
     protected notifications: Notifications,
+    protected readonly _id?: UUID,
   ) {
-    super(notifications);
+    super(notifications, undefined, _id);
   }
 
   setTickets(tickets: Ticket[]) {
