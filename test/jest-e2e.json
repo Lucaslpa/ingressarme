@@ -4,7 +4,8 @@
   "moduleNameMapper": {
     "^@business(.*)$": "<rootDir>/src/business$1",
     "^@application(.*)$": "<rootDir>/src/application$1",
-    "^@infra(.*)$": "<rootDir>/src/infra$1"
+    "^@infra(.*)$": "<rootDir>/src/infra$1",
+    "^@utils(.*)$": "<rootDir>/src/utils$1"
   },
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
