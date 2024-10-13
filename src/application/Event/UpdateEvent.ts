@@ -31,6 +31,7 @@ export class UpdateEvent extends IUpdateEvent {
     try {
       const {
         eventId,
+        userId,
         name,
         description,
         endDate,
@@ -42,9 +43,17 @@ export class UpdateEvent extends IUpdateEvent {
         address,
       } = input;
 
-      if (!eventId) {
+      if (!eventId || !userId) {
         return new Response<{ eventId: string }>(false, null, [
-          'Event id is required',
+          'eventId and userId are both required',
+        ]);
+      }
+
+      const user = await this.userServices.getById(userId);
+
+      if (!user) {
+        return new Response<{ eventId: string }>(false, null, [
+          'User not found',
         ]);
       }
 

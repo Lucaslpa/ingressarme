@@ -1,6 +1,7 @@
 export class UpdateEventInput {
   constructor(
     public readonly eventId: string,
+    public readonly userId: string,
     public readonly name: string,
     public readonly description: string,
     public readonly startDate: string,
