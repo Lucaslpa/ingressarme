@@ -77,6 +77,7 @@ describe('UpdateEvent', () => {
     const endDate = new Date(new Date().setDate(new Date().getDate() + 1));
     const input: UpdateEventInput = {
       name: '',
+      userId: '1',
       description:
         'Event Test Description Event Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test Description',
       startDate: '',
@@ -114,6 +115,7 @@ describe('UpdateEvent', () => {
 
     const input: UpdateEventInput = {
       name: 's',
+      userId: '1',
       description: 'sasas',
       startDate: '',
       endDate: '',
