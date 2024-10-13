@@ -28,81 +28,93 @@ export class CreateEvent extends ICreateEvent {
   async execute(
     input: CreateEventInput,
   ): Promise<Response<{ eventId: string }>> {
-    const {
-      userId,
-      name,
-      description,
-      endDate,
-      startDate,
-      ticketInfos,
-      categoriesIds,
-      latitude,
-      longitude,
-      iconImg,
-      bannerImg,
-      address,
-    } = input;
+    try {
+      const {
+        userId,
+        name,
+        description,
+        endDate,
+        startDate,
+        ticketInfos,
+        categoriesIds,
+        latitude,
+        longitude,
+        iconImg,
+        bannerImg,
+        address,
+      } = input;
 
-    const user = this.userServices.getById(userId);
+      const user = this.userServices.getById(userId);
 
-    if (!user) {
-      return new Response<{ eventId: string }>(false, null, ['User not found']);
-    }
+      if (!user) {
+        return new Response<{ eventId: string }>(false, null, [
+          'User not found',
+        ]);
+      }
 
-    const localization = new Localization(
-      address,
-      latitude,
-      longitude,
-      this.notifications,
-      this.localizationValidator,
-    );
-
-    const duration = new Duration(
-      startDate,
-      endDate,
-      this.notifications,
-      this.durationValidator,
-    );
-    const event = new MEvent(
-      name,
-      description,
-      duration,
-      categoriesIds,
-      localization,
-      iconImg,
-      bannerImg,
-      userId,
-      this.notifications,
-    );
-    const tickets = ticketInfos.map(
-      (info) =>
-        new Ticket(
-          info.description,
-          info.price,
-          info.quantity,
-          event.id,
-          info.tierId,
-          this.notifications,
-          this.ticketValidator,
-        ),
-    );
-
-    event.setTickets(tickets);
-
-    if (!event.isValid(this.eventValidator)) {
-      return new Response<{ eventId: string }>(
-        false,
-        null,
-        event.getNotifications,
+      const localization = new Localization(
+        address,
+        latitude,
+        longitude,
+        this.notifications,
+        this.localizationValidator,
       );
+
+      const duration = new Duration(
+        startDate,
+        endDate,
+        this.notifications,
+        this.durationValidator,
+      );
+      const event = new MEvent(
+        name,
+        description,
+        duration,
+        categoriesIds,
+        localization,
+        iconImg,
+        bannerImg,
+        userId,
+        this.notifications,
+      );
+
+      const tickets = ticketInfos.map(
+        (info) =>
+          new Ticket(
+            info.description,
+            info.price,
+            info.quantity,
+            event.id,
+            info.tierId,
+            this.notifications,
+            this.ticketValidator,
+          ),
+      );
+
+      event.setTickets(tickets);
+
+      if (!event.isValid(this.eventValidator)) {
+        return new Response<{ eventId: string }>(
+          false,
+          null,
+          event.getNotifications,
+        );
+      }
+
+      const eventResult = await this.eventServices.add(event);
+
+      return new Response<{ eventId: string }>(
+        true,
+        { eventId: eventResult.id },
+        [],
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        return new Response<{ eventId: string }>(false, null, [error.message]);
+      }
+      return new Response<{ eventId: string }>(false, null, [
+        'An error occurred on create event',
+      ]);
     }
-
-    const eventResult = await this.eventServices.add(event);
-
-    return new Response<{ eventId: string }>(
-      true,
-      { eventId: eventResult.id },
-      [],
-    );
   }
 }
