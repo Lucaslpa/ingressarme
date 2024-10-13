@@ -13,6 +13,7 @@ export class Tier extends Entity<Tier> {
   ) {
     super(notifications, tierValidator);
     this.setColor();
+    this.id = this.name;
   }
 
   public get color(): ETiersColors {

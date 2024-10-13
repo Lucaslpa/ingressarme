@@ -1,7 +1,8 @@
-DROP TABLE IF EXISTS Event_Ticket;
-DROP TABLE IF EXISTS Ticket_Tier;
-DROP TABLE IF EXISTS Tickets;
-DROP TABLE IF EXISTS Event_Categorie;
-DROP TABLE IF EXISTS Categories;
-DROP TABLE IF EXISTS Tiers;
-DROP TABLE IF EXISTS Events;
+DO $$ 
+DECLARE 
+    r RECORD; 
+BEGIN 
+    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP 
+        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE'; 
+    END LOOP; 
+END $$;

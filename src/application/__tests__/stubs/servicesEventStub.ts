@@ -6,6 +6,7 @@ import {
   LocalizationValidator,
   MEvent,
   Notifications,
+  Ticket,
 } from '@business';
 
 export const servicesEventStub: IServicesEvent = {
@@ -58,5 +59,14 @@ export const servicesEventStub: IServicesEvent = {
   },
   getAll: function (): Promise<MEvent[]> {
     return Promise.resolve([]);
+  },
+  addTicket: function (ticket: Ticket): Promise<void> {
+    throw new Error('Function not implemented.');
+  },
+  updateTicket: function (ticket: Ticket): Promise<void> {
+    throw new Error('Function not implemented.');
+  },
+  removeTicket: function (ticketId: string): Promise<void> {
+    throw new Error('Function not implemented.');
   },
 };

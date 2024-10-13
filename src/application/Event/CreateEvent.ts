@@ -1,6 +1,7 @@
 import {
   Categorie,
   Duration,
+  ETicketTierArray,
   IModelValidator,
   IServices,
   Localization,
@@ -17,7 +18,6 @@ export class CreateEvent extends ICreateEvent {
   constructor(
     private readonly eventServices: IServices<MEvent>,
     private readonly categorieServices: IServices<Categorie>,
-    private readonly ticketServices: IServices<Ticket>,
     private readonly userServices: IServices<User>,
     private readonly notifications: Notifications,
     private readonly eventValidator: IModelValidator<MEvent>,
@@ -105,9 +105,8 @@ export class CreateEvent extends ICreateEvent {
         );
       }
 
-      const areTiersValid = (await this.ticketServices.getAll()).every(
-        (ticket) =>
-          ticketInfos.map((info) => info.tierId).includes(ticket.tierId),
+      const areTiersValid = ETicketTierArray.every((tierId) =>
+        ticketInfos.map((info) => info.tierId).includes(tierId),
       );
 
       if (!areTiersValid) {

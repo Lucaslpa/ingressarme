@@ -14,3 +14,5 @@ export enum ETicketTier {
   ultimate = 'ultimate',
   supreme = 'supreme',
 }
+
+export const ETicketTierArray = Object.values(ETicketTier);

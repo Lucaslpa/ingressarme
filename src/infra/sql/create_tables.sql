@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS Categories (
-  id UUID NOT NULL PRIMARY KEY,
-  name VARCHAR(50) NOT NULL
+  name VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT pk_category PRIMARY KEY (name)
 );
 
 CREATE TABLE IF NOT EXISTS Events (
   id UUID NOT NULL PRIMARY KEY,
   name VARCHAR(50) NOT NULL,
   description VARCHAR(800) NOT NULL,
-  email VARCHAR(255) NOT NULL,
   address VARCHAR(255) NOT NULL,
   latitude DECIMAL(10, 8) NOT NULL,
   longitude DECIMAL(11, 8) NOT NULL,
@@ -20,27 +20,25 @@ CREATE TABLE IF NOT EXISTS Events (
   user_id VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Event_Categorie (
+CREATE TABLE IF NOT EXISTS Event_Categories (
   event_id UUID NOT NULL,
-  category_id UUID NOT NULL,
-  PRIMARY KEY (event_id, category_id),
+  category_name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (event_id, category_name),
   CONSTRAINT fk_event FOREIGN KEY (event_id)
     REFERENCES Events(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT fk_category FOREIGN KEY (category_id)
-    REFERENCES Categories(id)
+  CONSTRAINT fk_category FOREIGN KEY (category_name)
+    REFERENCES Categories(name)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Tiers (
-  id UUID NOT NULL PRIMARY KEY,
   name VARCHAR(50) NOT NULL,
   color VARCHAR(20) NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL,
-  user_id VARCHAR(255) NOT NULL
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT pk_tier PRIMARY KEY (name)
 );
 
 CREATE TABLE IF NOT EXISTS Tickets (
@@ -49,45 +47,16 @@ CREATE TABLE IF NOT EXISTS Tickets (
   quantity INT NOT NULL,
   price DECIMAL(10, 2) NOT NULL,
   event_id UUID NOT NULL,
-  tier_id UUID NOT NULL,
+  tier_name VARCHAR(50) NOT NULL,
   currency VARCHAR(3) NOT NULL,
   created_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
-  user_id VARCHAR(255) NOT NULL,
   CONSTRAINT fk_event FOREIGN KEY (event_id)
     REFERENCES Events(id)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT fk_tier FOREIGN KEY (tier_id)
-    REFERENCES Tiers(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Event_Ticket (
-  event_id UUID NOT NULL,
-  ticket_id UUID NOT NULL,
-  PRIMARY KEY (event_id, ticket_id),
-  CONSTRAINT fk_event FOREIGN KEY (event_id)
-    REFERENCES Events(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT fk_ticket FOREIGN KEY (ticket_id)
-    REFERENCES Tickets(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Ticket_Tier (
-  ticket_id UUID NOT NULL,
-  tier_id UUID NOT NULL,
-  PRIMARY KEY (ticket_id, tier_id),
-  CONSTRAINT fk_ticket FOREIGN KEY (ticket_id)
-    REFERENCES Tickets(id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT fk_tier FOREIGN KEY (tier_id)
-    REFERENCES Tiers(id)
+  CONSTRAINT fk_tier FOREIGN KEY (tier_name)
+    REFERENCES Tiers(name)
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );

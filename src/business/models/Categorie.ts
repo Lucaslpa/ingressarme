@@ -1,13 +1,14 @@
 import { UUID } from 'node:crypto';
 import { Notifications } from '../entityNotification';
 import { Entity } from './Entity';
+import { ECategories } from '../interfaces';
 
 export class Categorie extends Entity<Categorie> {
   constructor(
-    public readonly name: string,
+    public readonly name: ECategories,
     protected notifications: Notifications,
-    protected readonly _id?: UUID,
   ) {
-    super(notifications, undefined, _id);
+    super(notifications, undefined);
+    this.id = name;
   }
 }

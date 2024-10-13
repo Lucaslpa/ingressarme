@@ -1,5 +1,4 @@
 import { IServices, Categorie, Notifications } from '@business';
-import { UUID } from 'node:crypto';
 
 export const servicesCategoriesStub: IServices<Categorie> = {
   add: function (entity: Categorie): Promise<Categorie> {
@@ -12,12 +11,12 @@ export const servicesCategoriesStub: IServices<Categorie> = {
     throw new Error('Function not implemented.');
   },
   getById: function (id: string): Promise<Categorie> {
-    return Promise.resolve(new Categorie('1', new Notifications()));
+    return Promise.resolve(new Categorie('1' as any, new Notifications()));
   },
   getAll: function (): Promise<Categorie[]> {
     return Promise.resolve([
-      new Categorie('category1', new Notifications(), '1' as UUID),
-      new Categorie('category2', new Notifications(), '2' as UUID),
+      new Categorie('category1' as any, new Notifications()),
+      new Categorie('category2' as any, new Notifications()),
     ]);
   },
 };

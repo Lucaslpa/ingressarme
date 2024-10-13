@@ -1,5 +1,7 @@
 import { Client } from 'pg';
 import { StartDatabase } from './StartDatabase';
+import { promises as fs } from 'fs';
+const path = require('path');
 
 export class Database {
   private client: Client = new Client({
