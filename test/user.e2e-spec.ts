@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { UserModule } from './../src/modules/User/UserModule';
 import { UserInput } from '@application';
 import { ERole } from '@business';
-import { FirebaseModule } from './../src/firebase.module';
+import { FirebaseModule } from '../src/modules/firebase.module';
 import { ConfigModule } from '@nestjs/config';
 import { TokenIsValid } from '@infra';
 

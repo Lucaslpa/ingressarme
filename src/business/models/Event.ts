@@ -21,7 +21,7 @@ export class MEvent extends Entity<MEvent> {
     public readonly bannerImg: string,
     public readonly userId: string,
     protected notifications: Notifications,
-    protected readonly _id?: UUID,
+    protected readonly _id?: string,
   ) {
     super(notifications, undefined, _id);
   }

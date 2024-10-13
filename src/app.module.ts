@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { FirebaseModule } from './firebase.module';
+import { FirebaseModule } from './modules/firebase.module';
 import { UserModule } from './modules/User/UserModule';
+import { DatabaseModule } from './modules/database.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { UserModule } from './modules/User/UserModule';
       isGlobal: true,
     }),
     FirebaseModule,
+    DatabaseModule,
     UserModule,
   ],
   controllers: [AppController],

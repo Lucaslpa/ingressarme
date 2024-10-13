@@ -24,7 +24,7 @@
       "@infra": ["src/infra"],
       "@utils": ["src/utils"],
     },
-    
+    "assets": ["**/*.sql"]
     
   }
 }
