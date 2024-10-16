@@ -1,9 +1,12 @@
 import {
-  Categorie,
+  Category,
   Duration,
+  ECategories,
+  ECategoriesArray,
   ETicketTierArray,
   IModelValidator,
   IServices,
+  IServicesEvent,
   Localization,
   MEvent,
   Notifications,
@@ -16,14 +19,14 @@ import { Response } from '../dto';
 
 export class CreateEvent extends ICreateEvent {
   constructor(
-    private readonly eventServices: IServices<MEvent>,
-    private readonly categorieServices: IServices<Categorie>,
+    private readonly eventServices: IServicesEvent,
     private readonly userServices: IServices<User>,
     private readonly notifications: Notifications,
     private readonly eventValidator: IModelValidator<MEvent>,
     private readonly ticketValidator: IModelValidator<Ticket>,
     private readonly localizationValidator: IModelValidator<Localization>,
     private readonly durationValidator: IModelValidator<Duration>,
+    private readonly categoryValidator: IModelValidator<Category>,
   ) {
     super();
   }
@@ -39,7 +42,7 @@ export class CreateEvent extends ICreateEvent {
         endDate,
         startDate,
         ticketInfos,
-        categoriesIds,
+        categories: categoriesInput,
         latitude,
         longitude,
         iconImg,
@@ -69,11 +72,11 @@ export class CreateEvent extends ICreateEvent {
         this.notifications,
         this.durationValidator,
       );
+
       const event = new MEvent(
         name,
         description,
         duration,
-        categoriesIds,
         localization,
         iconImg,
         bannerImg,
@@ -88,14 +91,20 @@ export class CreateEvent extends ICreateEvent {
             info.price,
             info.quantity,
             event.id,
-            info.tierId,
+            info.tier,
             info.currency,
             this.notifications,
             this.ticketValidator,
           ),
       );
 
+      const categories = categoriesInput.map(
+        (categorie) =>
+          new Category(categorie, this.notifications, this.categoryValidator),
+      );
+
       event.setTickets(tickets);
+      event.setCategories(categories);
 
       if (!event.isValid(this.eventValidator)) {
         return new Response<{ eventId: string }>(
@@ -103,26 +112,6 @@ export class CreateEvent extends ICreateEvent {
           null,
           event.getNotifications,
         );
-      }
-
-      const areTiersValid = ETicketTierArray.every((tierId) =>
-        ticketInfos.map((info) => info.tierId).includes(tierId),
-      );
-
-      if (!areTiersValid) {
-        return new Response<{ eventId: string }>(false, null, [
-          'Tier from some ticket not exist',
-        ]);
-      }
-
-      const areCategoriesValid = (await this.categorieServices.getAll()).every(
-        (categorie) => categoriesIds.includes(categorie.id),
-      );
-
-      if (!areCategoriesValid) {
-        return new Response<{ eventId: string }>(false, null, [
-          'Some categorie not exist',
-        ]);
       }
 
       const eventResult = await this.eventServices.add(event);

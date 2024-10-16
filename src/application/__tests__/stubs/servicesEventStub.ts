@@ -25,7 +25,6 @@ export const servicesEventStub: IServicesEvent = {
         new Notifications(),
         new DurationValidator(),
       ),
-      ['1'],
       new Localization(
         'address 2113132123',
         0,

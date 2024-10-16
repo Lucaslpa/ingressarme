@@ -1,4 +1,10 @@
-import { IServices, Notifications, Ticket, TicketValidator } from '@business';
+import {
+  ETicketTier,
+  IServices,
+  Notifications,
+  Ticket,
+  TicketValidator,
+} from '@business';
 
 export const servicesTicketStub: IServices<Ticket> = {
   add: function (entity: Ticket): Promise<Ticket> {
@@ -17,7 +23,7 @@ export const servicesTicketStub: IServices<Ticket> = {
         200,
         20,
         '1',
-        '1',
+        ETicketTier.diamond,
         'RS',
         new Notifications(),
         new TicketValidator(),
@@ -31,7 +37,7 @@ export const servicesTicketStub: IServices<Ticket> = {
         200,
         20,
         '1',
-        '1',
+        ETicketTier.diamond,
         'RS',
         new Notifications(),
         new TicketValidator(),
@@ -41,7 +47,7 @@ export const servicesTicketStub: IServices<Ticket> = {
         200,
         20,
         '1',
-        '1',
+        ETicketTier.diamond,
         'RS',
         new Notifications(),
         new TicketValidator(),

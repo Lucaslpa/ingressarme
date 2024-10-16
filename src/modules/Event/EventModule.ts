@@ -42,6 +42,14 @@ import { ICreateEvent } from 'src/application/interfaces/ICreateEvent';
       provide: IModelValidator<MEvent>,
       useClass: EventValidator,
     },
+    {
+      provide: IServices<MEvent>,
+      useClass: UserServices,
+    },
+    {
+      provide: ICreateEvent,
+      useClass: CreateEvent,
+    },
   ],
 })
 export class UserModule {}

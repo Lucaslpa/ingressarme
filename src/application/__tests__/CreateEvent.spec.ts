@@ -2,12 +2,14 @@ import {
   DurationValidator,
   EventValidator,
   IServices,
-  Localization,
   MEvent,
   Notifications,
   User,
   LocalizationValidator,
   TicketValidator,
+  ETicketTier,
+  ECategories,
+  CategoryValidator,
 } from '@business';
 import { CreateEventInput } from '../dto/CreateEventInput';
 import { CreateEvent } from '../Event';
@@ -35,11 +37,11 @@ describe('CreateEvent', () => {
           quantity: 10,
           price: 10,
           description: 'Event Test Ticket',
-          tierId: '1',
+          tier: ETicketTier.diamond,
           currency: 'BRL',
         },
       ],
-      categoriesIds: ['1', '2'],
+      categories: [ECategories.FEIRA, ECategories.BALADA],
       iconImg: 'httpt://icon.com/icon.png',
       bannerImg: 'httpt://banner.com/banner.png',
       userId: '1',
@@ -49,14 +51,13 @@ describe('CreateEvent', () => {
 
     const event = new CreateEvent(
       servicesEventStub,
-      servicesCategoriesStub,
-      servicesTicketStub,
       servicesUserStub,
       notifications,
       new EventValidator(),
       new TicketValidator(),
       new LocalizationValidator(),
       new DurationValidator(),
+      new CategoryValidator(),
     );
     const response = await event.execute(input);
     console.log(response);
@@ -75,6 +76,7 @@ describe('CreateEvent', () => {
       name: 'Event Test',
       description:
         'Event Test Description Event Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test DescriptionEvent Test Description',
+      categories: [ECategories.CARNAVAL, ECategories.COSPLAY],
       startDate: yesterday.toISOString(),
       endDate: new Date().toISOString(),
       address: 'Event Test Adress',
@@ -85,11 +87,10 @@ describe('CreateEvent', () => {
           quantity: 10,
           price: 10,
           description: 'Event Test Ticket',
-          tierId: '1',
+          tier: ETicketTier.diamond,
           currency: 'BRL',
         },
       ],
-      categoriesIds: ['1', '2'],
       iconImg: 'httpt://icon.com/icon.png',
       bannerImg: 'httpt://banner.com/banner.png',
       userId: '1',
@@ -135,15 +136,14 @@ describe('CreateEvent', () => {
     const notifications = new Notifications();
 
     const event = new CreateEvent(
-      eventServices,
-      servicesCategoriesStub,
-      servicesTicketStub,
-      userServices,
+      servicesEventStub,
+      servicesUserStub,
       notifications,
       new EventValidator(),
       new TicketValidator(),
       new LocalizationValidator(),
       new DurationValidator(),
+      new CategoryValidator(),
     );
     const response = await event.execute(input);
 

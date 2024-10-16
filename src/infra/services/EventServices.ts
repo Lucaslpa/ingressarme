@@ -1,4 +1,4 @@
-import { IServicesEvent, MEvent, Ticket } from '@business';
+import { ECategories, IServicesEvent, MEvent, Ticket } from '@business';
 import { Database } from '../data/Database';
 
 export class EventServices extends IServicesEvent {
@@ -13,7 +13,7 @@ export class EventServices extends IServicesEvent {
       ticket.quantity,
       ticket.price,
       ticket.eventId,
-      ticket.tierId,
+      ticket.tier,
       ticket.currency,
       new Date().toISOString(),
       new Date().toISOString(),
@@ -29,7 +29,7 @@ export class EventServices extends IServicesEvent {
       ticket.description,
       ticket.quantity,
       ticket.price,
-      ticket.tierId,
+      ticket.tier,
       ticket.currency,
       new Date().toISOString(),
       ticket.id,
@@ -45,9 +45,9 @@ export class EventServices extends IServicesEvent {
     this.database.query(query, values);
   }
 
-  async addCategory(eventId: string, categoryId: string): Promise<void> {
+  async addCategory(eventId: string, category: ECategories): Promise<void> {
     const query = 'INSERT INTO Event_Categorie ($1, $2)';
-    const values = [eventId, categoryId];
+    const values = [eventId, category];
     this.database.query(query, values);
   }
 
@@ -84,8 +84,8 @@ export class EventServices extends IServicesEvent {
       await this.addTicket(ticket);
     }
 
-    for (let categoryId of entity.categoriesIds) {
-      await this.addCategory(entity.id, categoryId);
+    for (let categorie of entity.categories) {
+      await this.addCategory(entity.id, categorie.name);
     }
 
     return entity;

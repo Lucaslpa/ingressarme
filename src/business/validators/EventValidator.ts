@@ -1,6 +1,7 @@
 import zod from 'zod';
 import { Validator } from './Validator';
 import { MEvent } from '../models/Event';
+import { ECategories } from '../interfaces';
 
 export class EventValidator extends Validator<MEvent> {
   constructor() {
@@ -18,9 +19,6 @@ const schema = zod
       .string()
       .min(50, 'Description must be at least 50 characters long')
       .max(800, 'Description must be at most 800 characters long'),
-    categoriesIds: zod
-      .array(zod.string())
-      .min(1, 'At least one category must be informed'),
     iconImg: zod.string().url('Icon image must be a valid URL'),
     bannerImg: zod.string().url('Banner image must be a valid URL'),
   })

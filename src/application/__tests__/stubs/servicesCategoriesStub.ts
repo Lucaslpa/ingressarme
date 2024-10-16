@@ -1,22 +1,37 @@
-import { IServices, Categorie, Notifications } from '@business';
+import { IServices, Category, Notifications, ECategories } from '@business';
+import { CategoryValidator } from '@business';
 
-export const servicesCategoriesStub: IServices<Categorie> = {
-  add: function (entity: Categorie): Promise<Categorie> {
+export const servicesCategoriesStub: IServices<Category> = {
+  add: function (entity: Category): Promise<Category> {
     throw new Error('Function not implemented.');
   },
-  update: function (entity: Categorie): Promise<Categorie> {
+  update: function (entity: Category): Promise<Category> {
     throw new Error('Function not implemented.');
   },
   delete: function (id: string): Promise<void> {
     throw new Error('Function not implemented.');
   },
-  getById: function (id: string): Promise<Categorie> {
-    return Promise.resolve(new Categorie('1' as any, new Notifications()));
+  getById: function (id: string): Promise<Category> {
+    return Promise.resolve(
+      new Category(
+        ECategories.BAR,
+        new Notifications(),
+        new CategoryValidator(),
+      ),
+    );
   },
-  getAll: function (): Promise<Categorie[]> {
+  getAll: function (): Promise<Category[]> {
     return Promise.resolve([
-      new Categorie('category1' as any, new Notifications()),
-      new Categorie('category2' as any, new Notifications()),
+      new Category(
+        ECategories.BAR,
+        new Notifications(),
+        new CategoryValidator(),
+      ),
+      new Category(
+        ECategories.DRAMA as any,
+        new Notifications(),
+        new CategoryValidator(),
+      ),
     ]);
   },
 };

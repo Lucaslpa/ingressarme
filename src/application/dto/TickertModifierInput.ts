@@ -1,3 +1,5 @@
+import { ETicketTier } from '@business';
+
 export class CreateTicketInput {
   constructor(
     public readonly eventId: string,
@@ -5,7 +7,7 @@ export class CreateTicketInput {
     public readonly price: number,
     public readonly quantity: number,
     public readonly currency: string,
-    public readonly tierId: string,
+    public readonly tier: ETicketTier,
   ) {}
 }
 

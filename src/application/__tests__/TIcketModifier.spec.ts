@@ -1,4 +1,4 @@
-import { Notifications, TicketValidator } from '@business';
+import { ETicketTier, Notifications, TicketValidator } from '@business';
 import { servicesEventStub } from './stubs/servicesEventStub';
 import {
   CreateTicketInput,
@@ -17,7 +17,7 @@ describe('TicketModifier', () => {
       200,
       10,
       'RS',
-      '1',
+      ETicketTier.elite,
     );
 
     const response = await new TickerModifier(
@@ -38,7 +38,7 @@ describe('TicketModifier', () => {
       200,
       0,
       'RS',
-      '1',
+      ETicketTier.deluxe,
     );
 
     const response = await new TickerModifier(
@@ -84,7 +84,7 @@ describe('TicketModifier', () => {
     expect(response.isSuccess).toBe(false);
 
     expect(response.errors).toEqual([
-      'description: Description must be at least 50 characters long',
+      'description: Description must be at least 10 characters long',
     ]);
   });
 

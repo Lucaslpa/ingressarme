@@ -1,18 +1,17 @@
 import {
-  Categorie,
+  Category,
   IServices,
   IServicesEvent,
   MEvent,
   Notifications,
 } from '@business';
 import { CategorieModifierInput, Response } from '../dto';
-import { CreateEventInput } from '../dto/CreateEventInput';
 import { ICategorieModifier } from '../interfaces/ICategorieModifier';
 
 export class CategorieModifier extends ICategorieModifier {
   constructor(
     private readonly eventServices: IServicesEvent,
-    private readonly categoriesServices: IServices<Categorie>,
+    private readonly categoriesServices: IServices<Category>,
   ) {
     super();
   }

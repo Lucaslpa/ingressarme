@@ -84,7 +84,6 @@ export class UpdateEvent extends IUpdateEvent {
         name || oldEvent.name,
         description || oldEvent.description,
         duration,
-        oldEvent.categoriesIds,
         localization,
         iconImg || oldEvent.iconImg,
         bannerImg || oldEvent.bannerImg,

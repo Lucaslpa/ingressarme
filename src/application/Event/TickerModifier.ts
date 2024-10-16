@@ -28,17 +28,17 @@ export class TickerModifier extends ITicketModifier {
 
   async add(input: CreateTicketInput): Promise<Response<null>> {
     try {
-      const { eventId, tierId, description, price, quantity, currency } = input;
-      if (!eventId || !tierId) {
+      const { eventId, tier, description, price, quantity, currency } = input;
+      if (!eventId || !tier) {
         return new Response<null>(false, null, [
           'eventId and tierId are both required',
         ]);
       }
 
-      const tier = await this.tierServices.getById(tierId);
+      const Tier = await this.tierServices.getById(tier);
 
-      if (!tier) {
-        return new Response<null>(false, null, ['Tier not found']);
+      if (!Tier) {
+        return new Response<null>(false, null, ['Invalid tier']);
       }
 
       const ticket = new Ticket(
@@ -46,7 +46,7 @@ export class TickerModifier extends ITicketModifier {
         price,
         quantity,
         eventId,
-        tierId,
+        tier,
         currency,
         this.notifcations,
         this.ticketValidator,
@@ -84,7 +84,7 @@ export class TickerModifier extends ITicketModifier {
         price || oldTicket.price,
         quantity || oldTicket.quantity,
         oldTicket.eventId,
-        oldTicket.tierId,
+        oldTicket.tier,
         currency || oldTicket.currency,
         this.notifcations,
         this.ticketValidator,

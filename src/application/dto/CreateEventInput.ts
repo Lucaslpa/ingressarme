@@ -1,3 +1,5 @@
+import { ECategories, ETicketTier } from '@business';
+
 export class CreateEventInput {
   constructor(
     public readonly name: string,
@@ -11,12 +13,12 @@ export class CreateEventInput {
       quantity: number;
       price: number;
       description: string;
-      tierId: string;
+      tier: ETicketTier;
       currency: string;
     }[],
     public readonly iconImg: string,
     public readonly bannerImg: string,
-    public readonly categoriesIds: string[],
+    public readonly categories: ECategories[],
     public readonly userId: string,
   ) {}
 }

@@ -6,4 +6,4 @@ export * from './Duration';
 export * from './Localization';
 export * from './Ticket';
 export * from './Tier';
-export * from './Categorie';
+export * from './Category';
