@@ -9,7 +9,6 @@ export abstract class Notifier {
   }
 
   public addNotifications(notifications: ENotification[]): void {
-    console.log('notifications1212', notifications);
     this.notifications.pushNotifations(notifications);
   }
 

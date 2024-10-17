@@ -4,3 +4,5 @@ export * from './IServices';
 export * from './IServicesEvent';
 export * from './ETicketTiers';
 export * from './ECategories';
+export * from './ETierColors';
+export * from './IServicesUser';

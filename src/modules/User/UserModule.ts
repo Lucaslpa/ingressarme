@@ -5,6 +5,7 @@ import {
   IModelValidator,
   IServices,
   Notifications,
+  User,
 } from '@business';
 import { IUserModifier, UserModifier } from '@application';
 
@@ -28,7 +29,7 @@ import { UserController } from './UserController';
       useClass: UserValidator,
     },
     {
-      provide: IServices,
+      provide: IServices<User>,
       useClass: UserServices,
     },
     {

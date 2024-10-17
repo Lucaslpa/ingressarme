@@ -12,15 +12,14 @@ import {
 import { UserInput, IUserModifier, Response, UserOutput } from '@application';
 import { HttpResponseInterceptor } from '../../utils/HttpResponseInterceptor';
 import { IsAuthenticatedInterceptor } from '../../utils/IsAuthenticatedInterceptor';
-import { CreateEventInput } from 'src/application/dto/CreateEventInput';
-import { ICreateEvent } from 'src/application/interfaces/ICreateEvent';
+import { CreateEventInput, ICreateEvent } from '@application';
 
 @UseInterceptors(HttpResponseInterceptor)
-@Controller('EventController')
+@Controller('event')
 export class EventController {
   constructor(private readonly createEvent: ICreateEvent) {}
 
-  @Post('/event/create')
+  @Post()
   async create(@Body() input: CreateEventInput) {
     const response = await this.createEvent.execute(input);
     return response;

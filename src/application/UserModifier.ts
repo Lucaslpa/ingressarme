@@ -33,7 +33,6 @@ export class UserModifier implements IUserModifier {
       );
       return new Response<UserOutput>(true, userResult, []);
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
         return new Response<UserOutput>(false, null, [error.message]);
       }
@@ -79,7 +78,6 @@ export class UserModifier implements IUserModifier {
       if (!oldUser) {
         return new Response<UserOutput>(false, null, ['User not found']);
       }
-      console.log('oldUser', oldUser);
       const newUser = new User(
         user.name || oldUser.name,
         user.email || oldUser.email,

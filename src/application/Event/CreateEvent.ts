@@ -1,12 +1,17 @@
 import {
   Category,
   Duration,
-  ECategories,
-  ECategoriesArray,
-  ETicketTierArray,
+  ERole,
+  EventValidator,
+  ICategoryValidator,
+  IDurationValidator,
+  IEventValidator,
+  ILocalizationValidator,
   IModelValidator,
   IServices,
   IServicesEvent,
+  IServicesUser,
+  ITicketValidator,
   Localization,
   MEvent,
   Notifications,
@@ -16,20 +21,35 @@ import {
 import { CreateEventInput } from '../dto/CreateEventInput';
 import { ICreateEvent } from '../interfaces/ICreateEvent';
 import { Response } from '../dto';
+import { Injectable } from '@nestjs/common';
+import { z } from 'zod';
 
-export class CreateEvent extends ICreateEvent {
+const schema = z
+  .object({
+    name: z
+      .string()
+      .min(5, 'Name must be at least 5 characters long')
+      .max(50, 'Name must be at most 50 characters long'),
+    description: z
+      .string()
+      .min(50, 'Description must be at least 50 characters long')
+      .max(800, 'Description must be at most 800 characters long'),
+    iconImg: z.string().url('Icon image must be a valid URL'),
+    bannerImg: z.string().url('Banner image must be a valid URL'),
+  })
+  .passthrough();
+@Injectable()
+export class CreateEvent implements ICreateEvent {
   constructor(
     private readonly eventServices: IServicesEvent,
-    private readonly userServices: IServices<User>,
+    private readonly userServices: IServicesUser,
     private readonly notifications: Notifications,
-    private readonly eventValidator: IModelValidator<MEvent>,
-    private readonly ticketValidator: IModelValidator<Ticket>,
-    private readonly localizationValidator: IModelValidator<Localization>,
-    private readonly durationValidator: IModelValidator<Duration>,
-    private readonly categoryValidator: IModelValidator<Category>,
-  ) {
-    super();
-  }
+    private readonly eventValidator: IEventValidator,
+    private readonly ticketValidator: ITicketValidator,
+    private readonly localizationValidator: ILocalizationValidator,
+    private readonly durationValidator: IDurationValidator,
+    private readonly categoryValidator: ICategoryValidator,
+  ) {}
 
   async execute(
     input: CreateEventInput,
@@ -50,11 +70,22 @@ export class CreateEvent extends ICreateEvent {
         address,
       } = input;
 
-      const user = this.userServices.getById(userId);
+      if (!userId)
+        return new Response<{ eventId: string }>(false, null, [
+          'userId is required',
+        ]);
+
+      const user = await this.userServices.getById(userId);
 
       if (!user) {
         return new Response<{ eventId: string }>(false, null, [
           'User not found',
+        ]);
+      }
+
+      if (user.role !== ERole.enterprise) {
+        return new Response<{ eventId: string }>(false, null, [
+          'User must be an enterprise',
         ]);
       }
 
@@ -106,7 +137,7 @@ export class CreateEvent extends ICreateEvent {
       event.setTickets(tickets);
       event.setCategories(categories);
 
-      if (!event.isValid(this.eventValidator)) {
+      if (!event.isValid(new EventValidator())) {
         return new Response<{ eventId: string }>(
           false,
           null,
@@ -122,7 +153,6 @@ export class CreateEvent extends ICreateEvent {
         [],
       );
     } catch (error) {
-      console.log(error);
       if (error instanceof Error) {
         return new Response<{ eventId: string }>(false, null, [error.message]);
       }

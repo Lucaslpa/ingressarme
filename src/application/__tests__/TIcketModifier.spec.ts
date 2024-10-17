@@ -27,7 +27,6 @@ describe('TicketModifier', () => {
       servicesTierStub,
       new Notifications(),
     ).add(input);
-    console.log(response);
     expect(response.isSuccess).toBe(true);
   });
 

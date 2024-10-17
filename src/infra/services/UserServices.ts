@@ -1,7 +1,7 @@
-import { User, IServices, Notifications } from '@business';
+import { User, Notifications, IServicesUser } from '@business';
 import admin, { FirebaseError } from 'firebase-admin';
 
-export class UserServices implements IServices<User> {
+export class UserServices extends IServicesUser {
   getAll(): Promise<User[]> {
     throw new Error('Method not implemented.');
   }

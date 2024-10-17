@@ -6,7 +6,7 @@ export class EventServices extends IServicesEvent {
 
   async addTicket(ticket: Ticket): Promise<void> {
     const queryCreateTicket =
-      'INSERT INTO Tickets ($1, $2, $3, $4, $5, $6, $7, $8, $9 )';
+      'INSERT INTO tickets (id, description, quantity, price, event_id, tier_name, currency, created_at, updated_at ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9 )';
     const valuesCreateTicket = [
       ticket.id,
       ticket.description,
@@ -42,13 +42,14 @@ export class EventServices extends IServicesEvent {
   async removeTicket(ticketId: string): Promise<void> {
     const query = 'DELETE FROM Tickets WHERE id = $1';
     const values = [ticketId];
-    this.database.query(query, values);
+    await this.database.query(query, values);
   }
 
   async addCategory(eventId: string, category: ECategories): Promise<void> {
-    const query = 'INSERT INTO Event_Categorie ($1, $2)';
+    const query =
+      'INSERT INTO event_categories (event_id, category_name) VALUES ($1, $2)';
     const values = [eventId, category];
-    this.database.query(query, values);
+    await this.database.query(query, values);
   }
 
   async removeCategory(eventId: string, categoryId: string): Promise<void> {
@@ -59,23 +60,28 @@ export class EventServices extends IServicesEvent {
   }
 
   async add(entity: MEvent): Promise<MEvent> {
-    const query =
-      'INSERT INTO Events ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13,$14)';
+    this.database.connect();
+    const query = `
+  INSERT INTO events (
+    id, name, description, address, latitude, longitude, start_date, end_date, icon_img, banner_img, created_at, updated_at, user_id
+  )
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+`;
 
     const values = [
-      entity.id,
-      entity.name,
-      entity.description,
-      entity.localization.address,
-      entity.localization.latitude,
-      entity.localization.longitude,
-      entity.date.startDate,
-      entity.date.endDate,
-      entity.iconImg,
-      entity.bannerImg,
-      new Date().toISOString(),
-      new Date().toISOString(),
-      entity.userId,
+      entity.id, // $1
+      entity.name, // $2
+      entity.description, // $3
+      entity.localization.address, // $4
+      entity.localization.latitude, // $5
+      entity.localization.longitude, // $6
+      entity.date.startDate, // $7
+      entity.date.endDate, // $8
+      entity.iconImg, // $9
+      entity.bannerImg, // $10
+      new Date().toISOString(), // $11 (created_at)
+      new Date().toISOString(), // $12 (updated_at)
+      entity.userId, // $13
     ];
 
     await this.database.query(query, values);
@@ -87,7 +93,7 @@ export class EventServices extends IServicesEvent {
     for (let categorie of entity.categories) {
       await this.addCategory(entity.id, categorie.name);
     }
-
+    this.database.disconnect();
     return entity;
   }
 

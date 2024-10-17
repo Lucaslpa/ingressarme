@@ -1,7 +1,7 @@
 import { Client } from 'pg';
 import { loadSQLFile } from '../loadSql';
 import { ECategoriesArray, ETicketTierArray } from '@business';
-import { ETiersColors } from 'src/business/interfaces/ETierColors';
+import { ETiersColors } from '@business';
 
 export class StartDatabase {
   constructor(protected readonly client: Client) {}

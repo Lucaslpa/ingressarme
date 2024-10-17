@@ -3,5 +3,6 @@ export * from './EventValidator';
 export * from './LocalizationValidator';
 export * from './TierValidator';
 export * from './DurationValidator';
-export * from './TickerValidator';
+export * from './TicketValidator';
 export * from './CategoryValidator';
+export * from './interfaces';

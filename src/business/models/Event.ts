@@ -53,7 +53,6 @@ export class MEvent extends Entity<MEvent> {
       this.notifications.push(new ENotification('Validator not found'));
       return false;
     }
-
     const { isValid, errors } = effectiveValidator.validate(this);
 
     this.localization.isValid();

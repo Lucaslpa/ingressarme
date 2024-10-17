@@ -7,12 +7,32 @@ import {
   Notifications,
   MEvent,
   EventValidator,
+  IServicesEvent,
+  User,
+  TicketValidator,
+  Ticket,
+  LocalizationValidator,
+  Localization,
+  Duration,
+  DurationValidator,
+  IEventValidator,
+  IUserValidator,
+  IDurationValidator,
+  ITicketValidator,
+  ILocalizationValidator,
+  IServicesUser,
+  ICategoryValidator,
+  CategoryValidator,
 } from '@business';
-import { CreateEvent, IUserModifier, UserModifier } from '@application';
+import { CreateEvent, ICreateEvent } from '@application';
 
-import { ITokenIsValid, UserServices, TokenIsValid } from '@infra';
+import {
+  ITokenIsValid,
+  UserServices,
+  TokenIsValid,
+  EventServices,
+} from '@infra';
 import { EventController } from './EventController';
-import { ICreateEvent } from 'src/application/interfaces/ICreateEvent';
 
 @Module({
   controllers: [EventController],
@@ -24,26 +44,38 @@ import { ICreateEvent } from 'src/application/interfaces/ICreateEvent';
     },
     {
       provide: ITokenIsValid,
-      useValue: TokenIsValid,
+      useClass: TokenIsValid,
     },
     {
-      provide: IModelValidator,
+      provide: IUserValidator,
       useClass: UserValidator,
     },
     {
-      provide: IServices,
-      useClass: UserServices,
-    },
-    {
-      provide: ICreateEvent,
-      useClass: CreateEvent,
-    },
-    {
-      provide: IModelValidator<MEvent>,
+      provide: IEventValidator,
       useClass: EventValidator,
     },
     {
-      provide: IServices<MEvent>,
+      provide: IDurationValidator,
+      useClass: DurationValidator,
+    },
+    {
+      provide: ITicketValidator,
+      useClass: TicketValidator,
+    },
+    {
+      provide: ICategoryValidator,
+      useClass: CategoryValidator,
+    },
+    {
+      provide: ILocalizationValidator,
+      useClass: LocalizationValidator,
+    },
+    {
+      provide: IServicesEvent,
+      useClass: EventServices,
+    },
+    {
+      provide: IServicesUser,
       useClass: UserServices,
     },
     {
@@ -52,4 +84,4 @@ import { ICreateEvent } from 'src/application/interfaces/ICreateEvent';
     },
   ],
 })
-export class UserModule {}
+export class EventModule {}

@@ -33,6 +33,4 @@ export enum ECategories {
   'MSCAOVIVO' = 'MÚSICA AO VIVO',
 }
 
-console.log(Object.values(ECategories));
-
 export const ECategoriesArray = Object.values(ECategories);

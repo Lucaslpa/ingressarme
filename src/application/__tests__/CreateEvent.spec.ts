@@ -60,7 +60,6 @@ describe('CreateEvent', () => {
       new CategoryValidator(),
     );
     const response = await event.execute(input);
-    console.log(response);
     expect(response.isSuccess).toBe(true);
     expect(response.data).toEqual({
       eventId: expect.any(String),
@@ -71,7 +70,6 @@ describe('CreateEvent', () => {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
 
-    console.log(yesterday);
     const input: CreateEventInput = {
       name: 'Event Test',
       description:

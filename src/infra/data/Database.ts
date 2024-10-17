@@ -27,7 +27,6 @@ export class Database {
   async disconnect() {
     try {
       await this.client.end();
-      console.log('Desconectado do banco de dados.');
     } catch (error) {
       console.error('Erro ao desconectar:', error);
     }
@@ -35,11 +34,14 @@ export class Database {
 
   async query(query: string, values: any[] = []): Promise<any> {
     try {
+      console.log('Executando query:', query, values);
       const result = await this.client.query(query, values);
+
       return result.rows;
     } catch (error) {
       console.error('Erro ao executar query:', error);
       throw error;
+    } finally {
     }
   }
 }

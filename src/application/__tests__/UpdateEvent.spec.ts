@@ -47,7 +47,6 @@ describe('UpdateEvent', () => {
       new DurationValidator(),
     );
     const response = await event.execute(input);
-    console.log(response);
     expect(response.isSuccess).toBe(true);
     expect(response.data).toEqual({
       eventId: expect.any(String),
@@ -84,7 +83,6 @@ describe('UpdateEvent', () => {
       new DurationValidator(),
     );
     const response = await event.execute(input);
-    console.log(response);
     expect(response.isSuccess).toBe(false);
     expect(response.data).toEqual(null);
     expect(response.errors).toEqual([

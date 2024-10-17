@@ -34,7 +34,6 @@ export class UserController {
   @UseInterceptors(IsAuthenticatedInterceptor)
   @Put('/update/:id')
   async update(@Param('id') id: string, @Body() input: UserInput) {
-    console.log(input, id, input.id !== id);
     if (input.id !== id)
       return new Response<UserOutput>(false, null, [
         'Id from body is different from id from params',

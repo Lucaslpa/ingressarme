@@ -1,25 +1,26 @@
-import zod from 'zod';
+import { z } from 'zod';
 import { Validator } from './Validator';
 import { MEvent } from '../models/Event';
 import { ECategories } from '../interfaces';
+import { IEventValidator } from './interfaces/IEventValidator';
 
-export class EventValidator extends Validator<MEvent> {
+export class EventValidator extends IEventValidator {
   constructor() {
     super(schema);
   }
 }
 
-const schema = zod
+const schema = z
   .object({
-    name: zod
+    name: z
       .string()
       .min(5, 'Name must be at least 5 characters long')
       .max(50, 'Name must be at most 50 characters long'),
-    description: zod
+    description: z
       .string()
       .min(50, 'Description must be at least 50 characters long')
       .max(800, 'Description must be at most 800 characters long'),
-    iconImg: zod.string().url('Icon image must be a valid URL'),
-    bannerImg: zod.string().url('Banner image must be a valid URL'),
+    iconImg: z.string().url('Icon image must be a valid URL'),
+    bannerImg: z.string().url('Banner image must be a valid URL'),
   })
   .passthrough();
