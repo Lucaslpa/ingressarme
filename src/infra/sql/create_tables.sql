@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS Categories (
   name VARCHAR(50) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT pk_category PRIMARY KEY (name)
+  
+  CONSTRAINT pk_category PRIMARY KEY (name),
+  CONSTRAINT unique_name UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS Events (
@@ -24,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Event_Categories (
   event_id UUID NOT NULL,
   category_name VARCHAR(50) NOT NULL,
   PRIMARY KEY (event_id, category_name),
+ 
   CONSTRAINT fk_event FOREIGN KEY (event_id)
     REFERENCES Events(id)
     ON DELETE CASCADE
@@ -38,11 +41,13 @@ CREATE TABLE IF NOT EXISTS Tiers (
   name VARCHAR(50) NOT NULL,
   color VARCHAR(20) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT pk_tier PRIMARY KEY (name)
+ 
+  CONSTRAINT pk_tier PRIMARY KEY (name),
+  CONSTRAINT unique_name_color UNIQUE (name, color)
 );
 
 CREATE TABLE IF NOT EXISTS Tickets (
-  id UUID NOT NULL PRIMARY KEY,
+  id UUID NOT NULL PRIMARY KEY UNIQUE,
   description VARCHAR(200) NOT NULL,
   quantity INT NOT NULL,
   price DECIMAL(10, 2) NOT NULL,

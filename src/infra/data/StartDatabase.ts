@@ -29,7 +29,7 @@ export class StartDatabase {
     const categories = ECategoriesArray;
     const tiers = ETicketTierArray;
 
-    const queryInsertCategories = `INSERT INTO categories (name) VALUES ($1)`;
+    const queryInsertCategories = `INSERT INTO categories (name) VALUES ($1) ON CONFLICT (name) DO NOTHING`;
 
     try {
       for (const category of categories) {
@@ -39,7 +39,7 @@ export class StartDatabase {
       console.error('Error inserting categories:', error);
     }
 
-    const queryInsertTiers = `INSERT INTO Tiers (name, color) VALUES ($1, $2)`;
+    const queryInsertTiers = `INSERT INTO Tiers (name, color) VALUES ($1, $2) ON CONFLICT (name, color) DO NOTHING`;
 
     try {
       for (const tier of tiers) {
