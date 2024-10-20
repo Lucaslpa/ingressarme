@@ -2,13 +2,10 @@ import {
   Category,
   Duration,
   ERole,
-  EventValidator,
   ICategoryValidator,
   IDurationValidator,
   IEventValidator,
   ILocalizationValidator,
-  IModelValidator,
-  IServices,
   IServicesEvent,
   IServicesUser,
   ITicketValidator,
@@ -16,7 +13,6 @@ import {
   MEvent,
   Notifications,
   Ticket,
-  User,
 } from '@business';
 import { CreateEventInput } from '../dto/CreateEventInput';
 import { ICreateEvent } from '../interfaces/ICreateEvent';

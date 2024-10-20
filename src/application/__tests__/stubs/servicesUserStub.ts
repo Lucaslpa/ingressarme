@@ -1,6 +1,6 @@
-import { IServices, User } from '@business';
+import { IServicesUser, User } from '@business';
 
-export const servicesUserStub: IServices<User> = {
+export const servicesUserStub: IServicesUser = {
   add: function (entity: User): Promise<User> {
     return Promise.resolve(entity);
   },

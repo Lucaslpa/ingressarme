@@ -3,9 +3,10 @@ import { Module, Scope } from '@nestjs/common';
 import {
   UserValidator,
   IModelValidator,
-  IServices,
   Notifications,
   User,
+  IServicesUser,
+  IUserValidator,
 } from '@business';
 import { IUserModifier, UserModifier } from '@application';
 
@@ -29,8 +30,12 @@ import { UserController } from './UserController';
       useClass: UserValidator,
     },
     {
-      provide: IServices<User>,
+      provide: IServicesUser,
       useClass: UserServices,
+    },
+    {
+      provide: IUserValidator,
+      useClass: UserValidator,
     },
     {
       provide: IUserModifier,

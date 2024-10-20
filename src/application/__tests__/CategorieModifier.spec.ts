@@ -1,5 +1,5 @@
 import { CategorieModifierInput } from '../dto';
-import { CategorieModifier } from '../Event/CategorieModifier';
+import { CategorieModifier } from '../Event/CategoryModifier';
 import { servicesEventStub } from './stubs/servicesEventStub';
 import { servicesCategoriesStub } from './stubs/servicesCategoriesStub';
 

@@ -2,13 +2,13 @@ import { Response, UserInput, UserOutput } from './dto';
 
 import { IUserModifier } from './interfaces/IUserModifier';
 import { Injectable } from '@nestjs/common';
-import { User, IServices, IModelValidator, Notifications } from '@business';
+import { User, Notifications, IServicesUser, IUserValidator } from '@business';
 
 @Injectable()
 export class UserModifier implements IUserModifier {
   constructor(
-    private readonly userValidator: IModelValidator<User>,
-    private readonly userServices: IServices<User>,
+    private readonly userValidator: IUserValidator,
+    private readonly userServices: IServicesUser,
     protected readonly notifications: Notifications,
   ) {}
 

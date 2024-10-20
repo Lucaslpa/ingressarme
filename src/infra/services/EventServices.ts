@@ -1,7 +1,10 @@
 import {
+  Category,
+  CategoryValidator,
   Duration,
   DurationValidator,
   ECategories,
+  IServicesCategory,
   IServicesEvent,
   Localization,
   LocalizationValidator,
@@ -10,9 +13,69 @@ import {
   Ticket,
 } from '@business';
 import { Database } from '../data/Database';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EventServices extends IServicesEvent {
+  constructor(private readonly categoryServices: IServicesCategory) {
+    super();
+  }
+
+  async getByIdEventCategories(id: string): Promise<MEvent | null> {
+    const query = `SELECT * FROM events 
+                   INNER JOIN event_categories ON events.id = event_categories.event_id
+                   WHERE id = $1`;
+
+    const values = [id];
+    const queryResult = (await this.database.query(query, values))[0];
+
+    if (!queryResult) return null;
+
+    const duration = new Duration(
+      new Date(queryResult.start_date).toISOString(),
+      new Date(queryResult.end_date).toISOString(),
+      new Notifications(),
+      new DurationValidator(),
+    );
+
+    const localization = new Localization(
+      queryResult.address,
+      Number(queryResult.latitude),
+      Number(queryResult.longitude),
+      new Notifications(),
+      new LocalizationValidator(),
+    );
+
+    const event = new MEvent(
+      queryResult.name,
+      queryResult.description,
+      duration,
+      localization,
+      queryResult.icon_img,
+      queryResult.banner_img,
+      queryResult.userId,
+      new Notifications(),
+      queryResult.id,
+    );
+
+    return event;
+  }
   private readonly database = new Database();
+
+  async getCategories(eventId: string): Promise<Category[]> {
+    const query = 'SELECT * FROM event_categories WHERE event_id = $1';
+    const values = [eventId];
+    const queryResult = await this.database.query(query, values);
+    const categories = queryResult.map(
+      (category: any) =>
+        new Category(
+          category.name,
+          new Notifications(),
+          new CategoryValidator(),
+        ),
+    );
+    return categories;
+  }
 
   async addTicket(ticket: Ticket): Promise<void> {
     const queryCreateTicket =
@@ -53,20 +116,6 @@ export class EventServices extends IServicesEvent {
     const query = 'DELETE FROM Tickets WHERE id = $1';
     const values = [ticketId];
     await this.database.query(query, values);
-  }
-
-  async addCategory(eventId: string, category: ECategories): Promise<void> {
-    const query =
-      'INSERT INTO event_categories (event_id, category_name) VALUES ($1, $2)';
-    const values = [eventId, category];
-    await this.database.query(query, values);
-  }
-
-  async removeCategory(eventId: string, categoryId: string): Promise<void> {
-    const query =
-      'DELETE FROM Event_Categorie WHERE eventId = $1 AND categoryId = $2';
-    const values = [eventId, categoryId];
-    this.database.query(query, values);
   }
 
   async add(entity: MEvent): Promise<MEvent> {
@@ -111,9 +160,10 @@ export class EventServices extends IServicesEvent {
       await this.addTicket(ticket);
     }
 
-    for (let categorie of entity.categories) {
-      await this.addCategory(entity.id, categorie.name);
-    }
+    await this.categoryServices.addCategoriesToEvent(
+      entity.id,
+      entity.categories,
+    );
 
     return entity;
   }

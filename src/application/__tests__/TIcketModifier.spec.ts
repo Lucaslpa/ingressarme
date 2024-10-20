@@ -4,9 +4,9 @@ import {
   CreateTicketInput,
   RemoveTicketInput,
   UpdateTicketInput,
-} from '../dto/TickertModifierInput';
+} from '../dto/TicketModifierInput';
 import { servicesTicketStub } from './stubs/servicesTicketStub';
-import { TickerModifier } from '../Event/TickerModifier';
+import { TickerModifier } from '../Event/TicketModifier';
 import { servicesTierStub } from './stubs/servicesTierStub';
 
 describe('TicketModifier', () => {

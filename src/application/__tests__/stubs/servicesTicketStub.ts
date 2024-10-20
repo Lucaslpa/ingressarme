@@ -1,12 +1,12 @@
 import {
   ETicketTier,
-  IServices,
+  IServicesTicket,
   Notifications,
   Ticket,
   TicketValidator,
 } from '@business';
 
-export const servicesTicketStub: IServices<Ticket> = {
+export const servicesTicketStub: IServicesTicket = {
   add: function (entity: Ticket): Promise<Ticket> {
     return Promise.resolve(entity);
   },
@@ -53,5 +53,14 @@ export const servicesTicketStub: IServices<Ticket> = {
         new TicketValidator(),
       ),
     ]);
+  },
+  getTicketsFromEvent: function (eventId: string): Promise<Ticket[]> {
+    throw new Error('Function not implemented.');
+  },
+  removeTicketFromEvent: function (eventId: string): Promise<void> {
+    throw new Error('Function not implemented.');
+  },
+  getTicketEvent: function (eventId: string): Promise<void> {
+    throw new Error('Function not implemented.');
   },
 };

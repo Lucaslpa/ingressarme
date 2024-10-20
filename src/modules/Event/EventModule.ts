@@ -2,18 +2,11 @@ import { Module, Scope } from '@nestjs/common';
 
 import {
   UserValidator,
-  IModelValidator,
-  IServices,
   Notifications,
-  MEvent,
   EventValidator,
   IServicesEvent,
-  User,
   TicketValidator,
-  Ticket,
   LocalizationValidator,
-  Localization,
-  Duration,
   DurationValidator,
   IEventValidator,
   IUserValidator,
@@ -23,11 +16,17 @@ import {
   IServicesUser,
   ICategoryValidator,
   CategoryValidator,
+  IServicesCategory,
+  IServicesTicket,
 } from '@business';
 import {
+  CategoryModifier,
   CreateEvent,
   ExcludeEvent,
+  ICategoryModifier,
   ICreateEvent,
+  ITicketModifier,
+  TicketModifier,
   UpdateEvent,
 } from '@application';
 
@@ -36,6 +35,8 @@ import {
   UserServices,
   TokenIsValid,
   EventServices,
+  CategoryServices,
+  TicketServices,
 } from '@infra';
 import { EventController } from './EventController';
 import { IExcludeEvent, IUpdateEvent } from '@application';
@@ -95,6 +96,22 @@ import { IExcludeEvent, IUpdateEvent } from '@application';
     {
       provide: IUpdateEvent,
       useClass: UpdateEvent,
+    },
+    {
+      provide: ITicketModifier,
+      useClass: TicketModifier,
+    },
+    {
+      provide: ICategoryModifier,
+      useClass: CategoryModifier,
+    },
+    {
+      provide: IServicesCategory,
+      useClass: CategoryServices,
+    },
+    {
+      provide: IServicesTicket,
+      useClass: TicketServices,
     },
   ],
 })

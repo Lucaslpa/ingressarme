@@ -1,7 +1,12 @@
-import { IServices, Category, Notifications, ECategories } from '@business';
+import {
+  Category,
+  Notifications,
+  ECategories,
+  IServicesCategory,
+} from '@business';
 import { CategoryValidator } from '@business';
 
-export const servicesCategoriesStub: IServices<Category> = {
+export const servicesCategoriesStub: IServicesCategory = {
   add: function (entity: Category): Promise<Category> {
     throw new Error('Function not implemented.');
   },
@@ -33,5 +38,14 @@ export const servicesCategoriesStub: IServices<Category> = {
         new CategoryValidator(),
       ),
     ]);
+  },
+  getCategoriesFromEvents: function (eventId: string): Promise<Category[]> {
+    throw new Error('Function not implemented.');
+  },
+  addCategoriesToEvent: function (categories: Category[]): Promise<string[]> {
+    throw new Error('Function not implemented.');
+  },
+  removeCategoriesFromEvent: function (categories: Category[]): Promise<void> {
+    throw new Error('Function not implemented.');
   },
 };

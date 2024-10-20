@@ -2,7 +2,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { UserModule } from '../src/modules/User/UserModule';
-import { CreateEventInput, UserInput, ExludeEventInput } from '@application';
+import {
+  CreateEventInput,
+  UserInput,
+  ExludeEventInput,
+  UpdateEventInput,
+  CategoryModifier,
+  CategoryModifierInput,
+  CreateTicketInput,
+  UpdateTicketInput,
+  RemoveTicketInput,
+} from '@application';
 import { ECategories, ERole, ETicketTier } from '@business';
 import { FirebaseModule } from '../src/modules/firebase.module';
 import { ConfigModule } from '@nestjs/config';
@@ -19,6 +29,7 @@ describe('UserModule (e2e)', () => {
   let app: INestApplication;
   let userId: string;
   let eventId: string;
+  let ticketId: string;
 
   beforeAll(async () => {
     const mockTokenIsValid = new MockTokenIsValid();
@@ -150,6 +161,109 @@ describe('UserModule (e2e)', () => {
     expect(response.status).toBe(400);
   });
 
+  it('should  update the created event', async () => {
+    const input: UpdateEventInput = {
+      userId,
+      eventId,
+      description: 'A great music festival with top artists from Brazil.',
+    };
+
+    const response = await request(app.getHttpServer())
+      .put('/event/' + eventId)
+      .send(input);
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should  add a new category to event', async () => {
+    const input: CategoryModifierInput = {
+      eventId,
+      categories: [ECategories.CLASSIC, ECategories.OKTOBERFEST],
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/event/category')
+      .send(input);
+
+    if (response.status !== 200) {
+      console.error('erro ao adicionar categoria:', response.body);
+    }
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should remove  category from event', async () => {
+    const input: CategoryModifierInput = {
+      eventId,
+      categories: [ECategories.CLASSIC, ECategories.OKTOBERFEST],
+    };
+
+    const response = await request(app.getHttpServer())
+      .delete('/event/category')
+      .send(input);
+
+    if (response.status !== 200) {
+      console.error('erro ao remover categoria:', response.body);
+    }
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should add a ticket to event', async () => {
+    const input: CreateTicketInput = {
+      eventId: 'a43bc22c-f10b-4b17-8559-168c20b72f0c',
+      description: 'General Admission',
+      price: 100.0,
+      quantity: 500,
+      tier: ETicketTier.standard,
+      currency: 'USD',
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/event/ticket')
+      .send(input);
+
+    if (response.status !== 200) {
+      console.error('erro ao adicionar ticket:', response.body);
+    }
+    expect(response.status).toBe(200);
+    ticketId = response.body.data.ticketId;
+  });
+
+  it('should update the ticket', async () => {
+    const input: UpdateTicketInput = {
+      ticketId: '8ddcce6c-6089-4311-9085-fcd33909c5da',
+      quantity: 20,
+      tier: ETicketTier.ultimate,
+    };
+
+    const response = await request(app.getHttpServer())
+      .put('/event/ticket')
+      .send(input);
+
+    if (response.status !== 200) {
+      console.error('erro ao atualizar ticket:', response.body);
+    }
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should delete the ticket', async () => {
+    const input: RemoveTicketInput = {
+      ticketId,
+    };
+
+    const response = await request(app.getHttpServer())
+      .delete('/event/ticket/')
+      .send(input);
+
+    if (response.status !== 200) {
+      console.error('erro ao excluir ticket:', response.body);
+    }
+
+    expect(response.status).toBe(200);
+  });
+
   it('should delete the created event', async () => {
     const input: ExludeEventInput = {
       eventId,
@@ -167,15 +281,15 @@ describe('UserModule (e2e)', () => {
     expect(response.status).toBe(200);
   });
 
-  // it('should delete the user', async () => {
-  //   const response = await request(app.getHttpServer())
-  //     .delete(`/user/exclude/${userId}`)
-  //     .set('Authorization', 'Bearer token');
+  it('should delete the user', async () => {
+    const response = await request(app.getHttpServer())
+      .delete(`/user/exclude/${userId}`)
+      .set('Authorization', 'Bearer token');
 
-  //   if (response.status !== 200) {
-  //     console.error('erro ao excluir usuario:', response.body);
-  //   }
+    if (response.status !== 200) {
+      console.error('erro ao excluir usuario:', response.body);
+    }
 
-  //   expect(response.status).toBe(200);
-  // });
+    expect(response.status).toBe(200);
+  });
 });

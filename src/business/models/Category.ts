@@ -7,7 +7,7 @@ export class Category extends Entity<Category> {
   constructor(
     public readonly name: ECategories,
     protected notifications: Notifications,
-    protected categorieValidator: IModelValidator<Category>,
+    protected categorieValidator?: IModelValidator<Category>,
   ) {
     super(notifications, categorieValidator);
     this.id = name;

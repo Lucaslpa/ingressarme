@@ -47,15 +47,7 @@ export const servicesEventStub: IServicesEvent = {
   delete: function (id: string): Promise<void> {
     return Promise.resolve();
   },
-  addCategory: function (eventId: string, categoryId: string): Promise<void> {
-    return Promise.resolve();
-  },
-  removeCategory: function (
-    eventId: string,
-    categoryId: string,
-  ): Promise<void> {
-    return Promise.resolve();
-  },
+
   getAll: function (): Promise<MEvent[]> {
     return Promise.resolve([]);
   },
@@ -66,6 +58,9 @@ export const servicesEventStub: IServicesEvent = {
     throw new Error('Function not implemented.');
   },
   removeTicket: function (ticketId: string): Promise<void> {
+    throw new Error('Function not implemented.');
+  },
+  getByIdEventCategories: function (id: string): Promise<MEvent | null> {
     throw new Error('Function not implemented.');
   },
 };

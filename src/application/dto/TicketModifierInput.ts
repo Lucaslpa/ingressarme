@@ -18,6 +18,7 @@ export class UpdateTicketInput {
     public readonly price?: number,
     public readonly quantity?: number,
     public readonly currency?: string,
+    public readonly tier?: ETicketTier,
   ) {}
 }
 
