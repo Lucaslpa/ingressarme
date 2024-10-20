@@ -1,33 +1,34 @@
 import {
   Duration,
-  IModelValidator,
-  IServices,
+  IDurationValidator,
+  IEventValidator,
+  ILocalizationValidator,
+  IServicesEvent,
+  IServicesUser,
   Localization,
   MEvent,
   Notifications,
-  Ticket,
-  User,
 } from '@business';
 import { Response } from '../dto';
 import { UpdateEventInput } from '../dto/UpdateEventInput';
 import { IUpdateEvent } from '../interfaces/IUpdateEvent';
+import { Injectable } from '@nestjs/common';
+import { EventViewer } from '../dto/EventViewer';
 
+@Injectable()
 export class UpdateEvent extends IUpdateEvent {
   constructor(
-    private readonly eventServices: IServices<MEvent>,
-    private readonly userServices: IServices<User>,
+    private readonly eventServices: IServicesEvent,
+    private readonly userServices: IServicesUser,
     private readonly notifications: Notifications,
-    private readonly eventValidatoOptional: IModelValidator<MEvent>,
-    private readonly ticketValidatorOptional: IModelValidator<Ticket>,
-    private readonly localizationValidatorOptional: IModelValidator<Localization>,
-    private readonly durationValidatorOptional: IModelValidator<Duration>,
+    private readonly eventValidator: IEventValidator,
+    private readonly localizationValidator: ILocalizationValidator,
+    private readonly durationValidator: IDurationValidator,
   ) {
     super();
   }
 
-  async execute(
-    input: UpdateEventInput,
-  ): Promise<Response<{ eventId: string }>> {
+  async execute(input: UpdateEventInput) {
     try {
       const {
         eventId,
@@ -44,7 +45,7 @@ export class UpdateEvent extends IUpdateEvent {
       } = input;
 
       if (!eventId || !userId) {
-        return new Response<{ eventId: string }>(false, null, [
+        return new Response(false, null, [
           'eventId and userId are both required',
         ]);
       }
@@ -52,17 +53,13 @@ export class UpdateEvent extends IUpdateEvent {
       const user = await this.userServices.getById(userId);
 
       if (!user) {
-        return new Response<{ eventId: string }>(false, null, [
-          'User not found',
-        ]);
+        return new Response(false, null, ['Invalid userId']);
       }
 
       const oldEvent = await this.eventServices.getById(eventId);
 
       if (!oldEvent) {
-        return new Response<{ eventId: string }>(false, null, [
-          'Event not found',
-        ]);
+        return new Response(false, null, ['Invalid eventId']);
       }
 
       const localization = new Localization(
@@ -70,14 +67,14 @@ export class UpdateEvent extends IUpdateEvent {
         latitude || oldEvent.localization.latitude,
         longitude || oldEvent.localization.longitude,
         this.notifications,
-        this.localizationValidatorOptional,
+        this.localizationValidator,
       );
 
       const duration = new Duration(
         startDate || oldEvent.date.startDate,
         endDate || oldEvent.date.endDate,
         this.notifications,
-        this.durationValidatorOptional,
+        this.durationValidator,
       );
 
       const newEvent = new MEvent(
@@ -92,28 +89,34 @@ export class UpdateEvent extends IUpdateEvent {
         oldEvent.id,
       );
 
-      if (!newEvent.isValid(this.eventValidatoOptional)) {
-        return new Response<{ eventId: string }>(
-          false,
-          null,
-          newEvent.getNotifications,
-        );
+      if (!newEvent.isValid(this.eventValidator)) {
+        return new Response(false, null, newEvent.getNotifications);
       }
 
-      const eventResult = await this.eventServices.update(newEvent);
+      await this.eventServices.update(newEvent);
 
-      return new Response<{ eventId: string }>(
-        true,
-        { eventId: eventResult.id },
+      const eventView = new EventViewer(
+        newEvent.id,
+        newEvent.name,
+        newEvent.date.startDate,
+        newEvent.date.endDate,
+        newEvent.bannerImg,
+        newEvent.iconImg,
+        newEvent.description,
+        newEvent.localization.address,
+        newEvent.localization.latitude,
+        newEvent.localization.longitude,
+        [],
         [],
       );
+
+      return new Response(true, eventView, []);
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
-        return new Response<{ eventId: string }>(false, null, [error.message]);
+        return new Response(false, null, [error.message]);
       }
-      return new Response<{ eventId: string }>(false, null, [
-        'Error on event update',
-      ]);
+      return new Response(false, null, ['Error on event update']);
     }
   }
 }

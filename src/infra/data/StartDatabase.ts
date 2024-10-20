@@ -1,21 +1,18 @@
-import { Client } from 'pg';
+import { Client, Pool } from 'pg';
 import { loadSQLFile } from '../loadSql';
 import { ECategoriesArray, ETicketTierArray } from '@business';
 import { ETiersColors } from '@business';
 
 export class StartDatabase {
-  constructor(protected readonly client: Client) {}
+  constructor(protected readonly client: Pool) {}
 
   public async Eexecute() {
     try {
-      await this.client.connect();
       await this.createTables();
       await this.seedTables();
-      this.client.end();
       console.log('Create tables executed with success');
     } catch (error) {
       console.error('Error creating tables:', error);
-      this.client.end();
     }
   }
 

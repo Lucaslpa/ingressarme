@@ -137,7 +137,7 @@ export class CreateEvent implements ICreateEvent {
       event.setTickets(tickets);
       event.setCategories(categories);
 
-      if (!event.isValid(new EventValidator())) {
+      if (!event.isValid(this.eventValidator)) {
         return new Response<{ eventId: string }>(
           false,
           null,

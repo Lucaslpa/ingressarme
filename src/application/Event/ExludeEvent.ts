@@ -2,6 +2,8 @@ import {
   Duration,
   IModelValidator,
   IServices,
+  IServicesEvent,
+  IServicesUser,
   Localization,
   MEvent,
   Notifications,
@@ -11,11 +13,13 @@ import {
 import { Response } from '../dto';
 import { IExcludeEvent } from '../interfaces/IExludeEvent';
 import { ExludeEventInput } from '../dto/ExludeEventInput';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ExcludeEvent extends IExcludeEvent {
   constructor(
-    private readonly eventServices: IServices<MEvent>,
-    private readonly userServices: IServices<User>,
+    private readonly eventServices: IServicesEvent,
+    private readonly userServices: IServicesUser,
   ) {
     super();
   }
@@ -30,7 +34,7 @@ export class ExcludeEvent extends IExcludeEvent {
         return new Response<{ eventId: string }>(false, null, [
           'userID and eventID are both required',
         ]);
-
+      console.log('userId', userId);
       const user = await this.userServices.getById(userId);
 
       if (!user)
@@ -38,17 +42,14 @@ export class ExcludeEvent extends IExcludeEvent {
           'User not found',
         ]);
 
-      const event = await this.eventServices.getById(eventId);
-
-      if (!event)
-        return new Response<{ eventId: string }>(false, null, [
-          'Event not found',
-        ]);
-
-      await this.eventServices.delete(event.id);
-
-      return new Response<{ eventId: string }>(true, { eventId: event.id }, []);
+      await this.eventServices.delete(input.eventId);
+      return new Response<{ eventId: string }>(
+        true,
+        { eventId: input.eventId },
+        [],
+      );
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         return new Response<{ eventId: string }>(false, null, [error.message]);
       }

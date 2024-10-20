@@ -24,7 +24,12 @@ import {
   ICategoryValidator,
   CategoryValidator,
 } from '@business';
-import { CreateEvent, ICreateEvent } from '@application';
+import {
+  CreateEvent,
+  ExcludeEvent,
+  ICreateEvent,
+  UpdateEvent,
+} from '@application';
 
 import {
   ITokenIsValid,
@@ -33,6 +38,7 @@ import {
   EventServices,
 } from '@infra';
 import { EventController } from './EventController';
+import { IExcludeEvent, IUpdateEvent } from '@application';
 
 @Module({
   controllers: [EventController],
@@ -81,6 +87,14 @@ import { EventController } from './EventController';
     {
       provide: ICreateEvent,
       useClass: CreateEvent,
+    },
+    {
+      provide: IExcludeEvent,
+      useClass: ExcludeEvent,
+    },
+    {
+      provide: IUpdateEvent,
+      useClass: UpdateEvent,
     },
   ],
 })

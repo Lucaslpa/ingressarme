@@ -69,6 +69,7 @@ export class UserServices extends IServicesUser {
   }
 
   async delete(id: string): Promise<void> {
+    console.log('id', id);
     const deleteUser = await admin
       .auth()
       .deleteUser(id)

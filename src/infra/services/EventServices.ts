@@ -1,4 +1,14 @@
-import { ECategories, IServicesEvent, MEvent, Ticket } from '@business';
+import {
+  Duration,
+  DurationValidator,
+  ECategories,
+  IServicesEvent,
+  Localization,
+  LocalizationValidator,
+  MEvent,
+  Notifications,
+  Ticket,
+} from '@business';
 import { Database } from '../data/Database';
 
 export class EventServices extends IServicesEvent {
@@ -60,28 +70,39 @@ export class EventServices extends IServicesEvent {
   }
 
   async add(entity: MEvent): Promise<MEvent> {
-    this.database.connect();
     const query = `
-  INSERT INTO events (
-    id, name, description, address, latitude, longitude, start_date, end_date, icon_img, banner_img, created_at, updated_at, user_id
-  )
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-`;
+    INSERT INTO events (
+     id, 
+     name, 
+     description, 
+     address,
+     latitude, 
+     longitude, 
+     start_date, 
+     end_date,
+     icon_img, 
+     banner_img,
+     created_at, 
+     updated_at, 
+     user_id
+     )
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+    `;
 
     const values = [
-      entity.id, // $1
-      entity.name, // $2
-      entity.description, // $3
-      entity.localization.address, // $4
-      entity.localization.latitude, // $5
-      entity.localization.longitude, // $6
-      entity.date.startDate, // $7
-      entity.date.endDate, // $8
-      entity.iconImg, // $9
-      entity.bannerImg, // $10
-      new Date().toISOString(), // $11 (created_at)
-      new Date().toISOString(), // $12 (updated_at)
-      entity.userId, // $13
+      entity.id,
+      entity.name,
+      entity.description,
+      entity.localization.address,
+      entity.localization.latitude,
+      entity.localization.longitude,
+      entity.date.startDate,
+      entity.date.endDate,
+      entity.iconImg,
+      entity.bannerImg,
+      new Date().toISOString(),
+      new Date().toISOString(),
+      entity.userId,
     ];
 
     await this.database.query(query, values);
@@ -93,13 +114,26 @@ export class EventServices extends IServicesEvent {
     for (let categorie of entity.categories) {
       await this.addCategory(entity.id, categorie.name);
     }
-    this.database.disconnect();
+
     return entity;
   }
 
   async update(entity: MEvent): Promise<MEvent> {
-    const query =
-      'UPDATE Events SET name = $1, description = $2, address = $3, latitude = $4, longitude = $5, startDate = $6, endDate = $7, iconImg = $8, bannerImg = $9, updatedAt = $10 WHERE id = $11';
+    const query = `
+    UPDATE Events
+    SET
+      name = $1,
+      description = $2,
+      address = $3,
+      latitude = $4,
+      longitude = $5,
+      start_date = $6,
+      end_date = $7,
+      icon_img = $8,
+      banner_img = $9,
+      updated_at = $10
+    WHERE id = $11;
+  `;
 
     const values = [
       entity.name,
@@ -114,21 +148,53 @@ export class EventServices extends IServicesEvent {
       new Date().toISOString(),
       entity.id,
     ];
-    this.database.query(query, values);
+    await this.database.query(query, values);
+
     return entity;
   }
 
   async delete(id: string): Promise<void> {
     const query = 'DELETE FROM Events WHERE id = $1';
     const values = [id];
+
     await this.database.query(query, values);
+
     return;
   }
 
-  async getById(id: string): Promise<MEvent> {
-    const query = 'SELECT * FROM Events WHERE id = $1';
+  async getById(id: string): Promise<MEvent | null> {
+    const query = `SELECT * FROM Events WHERE id = $1`;
     const values = [id];
-    const event = await this.database.query(query, values);
+    const queryResult = (await this.database.query(query, values))[0];
+
+    if (!queryResult) return null;
+
+    const duration = new Duration(
+      new Date(queryResult.start_date).toISOString(),
+      new Date(queryResult.end_date).toISOString(),
+      new Notifications(),
+      new DurationValidator(),
+    );
+
+    const localization = new Localization(
+      queryResult.address,
+      Number(queryResult.latitude),
+      Number(queryResult.longitude),
+      new Notifications(),
+      new LocalizationValidator(),
+    );
+
+    const event = new MEvent(
+      queryResult.name,
+      queryResult.description,
+      duration,
+      localization,
+      queryResult.icon_img,
+      queryResult.banner_img,
+      queryResult.userId,
+      new Notifications(),
+      queryResult.id,
+    );
 
     return event;
   }

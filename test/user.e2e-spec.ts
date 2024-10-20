@@ -7,6 +7,7 @@ import { ERole } from '@business';
 import { FirebaseModule } from '../src/modules/firebase.module';
 import { ConfigModule } from '@nestjs/config';
 import { TokenIsValid } from '@infra';
+import { EventModule } from 'src/modules';
 
 jest.mock('@infra', () => {
   return {
