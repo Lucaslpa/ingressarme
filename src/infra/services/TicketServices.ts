@@ -19,6 +19,29 @@ import { Database } from '../data/Database';
 export class TicketServices extends IServicesTicket {
   private readonly database = new Database();
 
+  async getTicketsByIds(ids: string[]): Promise<Ticket[]> {
+    const query = 'SELECT * FROM tickets WHERE id = ANY($1)';
+    const values = [ids];
+    const queryResult = await this.database.query(query, values);
+
+    const tickets = queryResult.map(
+      (ticket: any) =>
+        new Ticket(
+          ticket.description,
+          ticket.price,
+          ticket.quantity,
+          ticket.event_id,
+          ticket.tier_name,
+          ticket.currency,
+          new Notifications(),
+          new TicketValidator(),
+          ticket.id,
+        ),
+    );
+
+    return tickets;
+  }
+
   async getTicketEvent(eventId: string): Promise<void> {
     const query = 'SELECT * FROM tickets WHERE event_id = $1';
 

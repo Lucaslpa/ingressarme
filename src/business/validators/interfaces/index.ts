@@ -5,3 +5,4 @@ export * from './ITicketValidator';
 export * from './ITierValidator';
 export * from './IDurationValidator';
 export * from './IUserValidator';
+export * from './IAquisitionValidator';

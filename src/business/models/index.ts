@@ -7,3 +7,6 @@ export * from './Localization';
 export * from './Ticket';
 export * from './Tier';
 export * from './Category';
+export * from './Acquisition';
+export * from './Payment';
+export * from './Cart';
