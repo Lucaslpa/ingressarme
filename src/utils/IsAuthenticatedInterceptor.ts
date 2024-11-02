@@ -30,7 +30,7 @@ export class IsAuthenticatedInterceptor<T>
         new Response(false, null, ['Unauthorized']),
       );
     }
-    console.log('this.tokenIsValid', this.tokenIsValid.execute);
+
     return from(this.tokenIsValid.execute(token)).pipe(
       mergeMap((isValid) => {
         if (!isValid) {

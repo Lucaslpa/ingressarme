@@ -1,7 +1,10 @@
 import { z } from 'zod';
 import { IPaymentValidator } from './interfaces/IPaymentValidator';
 import { EPaymentStatus } from '../interfaces';
-import { EPaymentMethod } from '../interfaces/EPaymentMethod';
+import {
+  EPaymentMethod,
+  PaymentMethodsValues,
+} from '../interfaces/EPaymentMethod';
 
 export class paymentValidator extends IPaymentValidator {
   constructor() {
@@ -22,8 +25,8 @@ const schema = z
   .object({
     amount: z.number().min(0, 'Amount must be at least 0'),
     date: isoDateString,
-    methods: z.nativeEnum(EPaymentMethod, {
-      message: 'Invalid method.',
+    method: z.number().refine((num) => PaymentMethodsValues.includes(num), {
+      message: 'Invalid payment method',
     }),
     status: z.nativeEnum(EPaymentStatus, {
       message: 'Invalid status. Must be 1 = pending, 2 = approved, 3 = denied',

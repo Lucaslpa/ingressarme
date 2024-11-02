@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { IAquisitionValidator } from './interfaces/IAquisitionValidator';
+import { IAcquisitionValidator } from './interfaces/IAcquisitionValidator';
 
-export class AcquisitionValidator extends IAquisitionValidator {
+export class AcquisitionValidator extends IAcquisitionValidator {
   constructor() {
     super(schema);
   }

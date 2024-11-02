@@ -1,7 +1,7 @@
 import {
   Acquisition,
   Cart,
-  IAquisitionValidator,
+  IAcquisitionValidator,
   IServicesAcquisition,
   IServicesPayment,
   IServicesTicket,
@@ -12,14 +12,16 @@ import { AcquireTicketInput } from '../dto';
 import { Response } from '../dto';
 import { IAcquireTicket } from '../interfaces/IAcquireTicket';
 import { IPaymentValidator } from 'src/business/validators/interfaces/IPaymentValidator';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AcquireTicket extends IAcquireTicket {
   constructor(
     private readonly ticketServices: IServicesTicket,
     private readonly acquisitionServices: IServicesAcquisition,
     private readonly paymentServices: IServicesPayment,
     private readonly paymentValidator: IPaymentValidator,
-    private readonly acquisitionValidator: IAquisitionValidator,
+    private readonly acquisitionValidator: IAcquisitionValidator,
     private readonly notifications: Notifications,
   ) {
     super();
@@ -63,17 +65,20 @@ export class AcquireTicket extends IAcquireTicket {
 
     for (const ticketInput of ticketsInput) {
       const ticket = tickets.find((t) => t.id === ticketInput.id);
+
       if (!ticket) {
         return new Response(false, null, ['Invalid ticket id']);
       }
+
       const ticketAquisiction = new Acquisition(
         userId,
         ticket,
         ticketInput.quantity,
-        payment.id,
+        payment,
         this.notifications,
         this.acquisitionValidator,
       );
+      ticket.decrementQuantity(ticketAquisiction.quantity);
       cart.addTransaction(ticketAquisiction);
     }
 
@@ -81,10 +86,15 @@ export class AcquireTicket extends IAcquireTicket {
       return new Response(false, null, this.notifications.getNotifications);
     }
 
+    payment.incrementAmount(cart.totalPrice);
     await this.paymentServices.add(cart.payment);
 
     for (const transaction of cart.transactions) {
       await this.acquisitionServices.add(transaction);
+    }
+
+    for (const ticket of tickets) {
+      await this.ticketServices.update(ticket);
     }
 
     return new Response(true, null, []);

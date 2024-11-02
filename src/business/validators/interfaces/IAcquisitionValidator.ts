@@ -1,4 +1,4 @@
 import { Acquisition } from '../../models';
 import { Validator } from '../Validator';
 
-export abstract class IAquisitionValidator extends Validator<Acquisition> {}
+export abstract class IAcquisitionValidator extends Validator<Acquisition> {}

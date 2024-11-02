@@ -7,7 +7,7 @@ import { Entity } from './Entity';
 export class Payment extends Entity<Payment> {
   private _amount: number = 0;
   public readonly date: string = new Date().toISOString();
-  public readonly status: EPaymentStatus = EPaymentStatus.PENDING;
+  public status: EPaymentStatus = EPaymentStatus.PENDING;
 
   constructor(
     public readonly method: EPaymentMethod,
@@ -18,6 +18,10 @@ export class Payment extends Entity<Payment> {
     protected _id?: string,
   ) {
     super(notifications, paymentValidator, _id);
+  }
+
+  setStatus(status: EPaymentStatus) {
+    this.status = status;
   }
 
   get amount(): number {

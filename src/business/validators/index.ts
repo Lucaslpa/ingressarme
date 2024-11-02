@@ -6,3 +6,5 @@ export * from './DurationValidator';
 export * from './TicketValidator';
 export * from './CategoryValidator';
 export * from './interfaces';
+export * from './PaymentValidator';
+export * from './AcquisitionValidator';

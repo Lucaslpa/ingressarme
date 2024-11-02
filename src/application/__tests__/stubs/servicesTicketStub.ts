@@ -63,4 +63,28 @@ export const servicesTicketStub: IServicesTicket = {
   getTicketEvent: function (eventId: string): Promise<void> {
     throw new Error('Function not implemented.');
   },
+  getTicketsByIds: function (ids: string[]): Promise<Ticket[]> {
+    return Promise.resolve([
+      new Ticket(
+        'ticket festa 1',
+        200,
+        20,
+        '1',
+        ETicketTier.diamond,
+        'RS',
+        new Notifications(),
+        new TicketValidator(),
+      ),
+      new Ticket(
+        'ticket festa 2',
+        200,
+        20,
+        '1',
+        ETicketTier.diamond,
+        'RS',
+        new Notifications(),
+        new TicketValidator(),
+      ),
+    ]);
+  },
 };

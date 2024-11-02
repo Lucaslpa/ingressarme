@@ -3,3 +3,7 @@ export enum EPaymentMethod {
   DEBIT_CARD = 2,
   PIX = 3,
 }
+
+export const PaymentMethodsValues = Object.values(EPaymentMethod).filter(
+  (value) => typeof value === 'number',
+) as number[];

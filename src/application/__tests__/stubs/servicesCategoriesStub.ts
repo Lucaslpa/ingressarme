@@ -42,10 +42,16 @@ export const servicesCategoriesStub: IServicesCategory = {
   getCategoriesFromEvents: function (eventId: string): Promise<Category[]> {
     throw new Error('Function not implemented.');
   },
-  addCategoriesToEvent: function (categories: Category[]): Promise<string[]> {
+  addCategoriesToEvent: function (
+    eventiId: string,
+    categories: Category[],
+  ): Promise<string[]> {
     throw new Error('Function not implemented.');
   },
-  removeCategoriesFromEvent: function (categories: Category[]): Promise<void> {
+  removeCategoriesFromEvent: function (
+    eventId: string,
+    categories: Category[],
+  ): Promise<void> {
     throw new Error('Function not implemented.');
   },
 };

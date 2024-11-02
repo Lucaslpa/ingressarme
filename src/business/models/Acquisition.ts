@@ -1,5 +1,5 @@
 import { ENotification, Notifications } from '../entityNotification';
-import { IAquisitionValidator } from '../validators/interfaces/IAquisitionValidator';
+import { IAcquisitionValidator } from '../validators/interfaces/IAcquisitionValidator';
 import { Entity } from './Entity';
 import { Payment } from './Payment';
 import { Ticket } from './Ticket';
@@ -9,9 +9,9 @@ export class Acquisition extends Entity<Acquisition> {
     public readonly userId: string,
     public readonly ticket: Ticket,
     public readonly quantity: number,
-    public readonly paymentId: string,
+    public readonly payment: Payment,
     protected notifications: Notifications,
-    protected acquisitionValidator: IAquisitionValidator,
+    protected acquisitionValidator: IAcquisitionValidator,
     protected _id?: string,
   ) {
     super(notifications, acquisitionValidator, _id);

@@ -1,15 +1,5 @@
 import {
-  Category,
-  CategoryValidator,
-  Duration,
-  DurationValidator,
-  ECategories,
-  IServicesCategory,
-  IServicesEvent,
   IServicesTicket,
-  Localization,
-  LocalizationValidator,
-  MEvent,
   Notifications,
   Ticket,
   TicketValidator,
@@ -28,7 +18,7 @@ export class TicketServices extends IServicesTicket {
       (ticket: any) =>
         new Ticket(
           ticket.description,
-          ticket.price,
+          Number(ticket.price),
           ticket.quantity,
           ticket.event_id,
           ticket.tier_name,

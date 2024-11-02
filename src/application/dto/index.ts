@@ -7,3 +7,4 @@ export * from './ExludeEventInput';
 export * from './UpdateEventInput';
 export * from './TicketModifierInput';
 export * from './AcquireTicketInput';
+export * from './RefundTicketInput';

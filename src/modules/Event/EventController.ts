@@ -10,10 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {
-  UserInput,
-  IUserModifier,
   Response,
-  UserOutput,
   UpdateEventInput,
   IUpdateEvent,
   CategoryModifierInput,
@@ -24,10 +21,8 @@ import {
   RemoveTicketInput,
 } from '@application';
 import { HttpResponseInterceptor } from '../../utils/HttpResponseInterceptor';
-import { IsAuthenticatedInterceptor } from '../../utils/IsAuthenticatedInterceptor';
 import { CreateEventInput, ICreateEvent } from '@application';
 import { IExcludeEvent, ExludeEventInput } from '@application';
-import { TicketModifier } from 'src/application/Event/TicketModifier';
 
 @UseInterceptors(HttpResponseInterceptor)
 @Controller('event')
