@@ -1,30 +1,12 @@
-import { IModelValidator } from '../types/IModelValidator';
 import { User } from '../models/User';
 
 import zod from 'zod';
-import { ERole } from '../types/ERole';
-import { Injectable } from '@nestjs/common';
+import { ERole } from '../interfaces/ERole';
+import { Validator } from './Validator';
 
-@Injectable()
-export class UserValidator implements IModelValidator {
-  validate(model: User) {
-    const validationResult = schema.safeParse(model);
-
-    if (!validationResult.success) {
-      const errorDetails = validationResult.error.errors.map(
-        (error) => `${error.path.join('.')}: ${error.message}`,
-      );
-
-      return {
-        isValid: false,
-        errors: errorDetails,
-      };
-    }
-
-    return {
-      isValid: true,
-      errors: [],
-    };
+export class UserValidator extends Validator<User> {
+  constructor() {
+    super(schema);
   }
 }
 

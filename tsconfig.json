@@ -19,8 +19,10 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true, 
     "paths": {
-      "@EntityNotifier": ["src/business/entityNotification"],
-    }
-    
+      "@business": ["src/business"],
+      "@application": ["src/application"],
+      "@infra": ["src/infra"],
+      "@utils": ["src/utils"],
+    },
   }
 }

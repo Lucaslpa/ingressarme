@@ -1,35 +1,26 @@
 import { ENotification } from './Notification';
+import { Notifications } from './Notifications';
 
 export abstract class Notifier {
-  protected notifications: ENotification[] = [];
+  constructor(protected readonly notifications: Notifications) {}
 
-  protected addNotification(notification: ENotification): void;
-  protected addNotification(notification: ENotification[]): void;
-  protected addNotification(
-    notification: ENotification | ENotification[],
-  ): void {
-    if (Array.isArray(notification)) {
-      this.notifications.push(...notification);
-    } else {
-      this.notifications.push(notification);
-    }
+  public addNotification(notification: ENotification): void {
+    this.notifications.push(notification);
   }
 
-  public getNotifications(): string[] {
-    return this.notifications.map((notification) => notification.message);
+  public addNotifications(notifications: ENotification[]): void {
+    this.notifications.pushNotifations(notifications);
   }
 
-  protected hasNotifications(): boolean {
-    return this.notifications.length > 0;
+  public get getNotifications(): string[] {
+    return this.notifications.getNotifications;
   }
 
-  protected clearNotifications(): void {
-    this.notifications = [];
+  public get getNotificationsEntities(): ENotification[] {
+    return this.notifications.getNotificationsEntities;
   }
 
-  protected notify(): void {
-    this.notifications.forEach((notification) => {
-      console.log(notification.message);
-    });
+  public get hasNotifications(): boolean {
+    return this.notifications.hasNotifications;
   }
 }

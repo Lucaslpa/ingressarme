@@ -1,0 +1,98 @@
+CREATE TABLE IF NOT EXISTS Categories (
+  name VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  
+  CONSTRAINT pk_category PRIMARY KEY (name),
+  CONSTRAINT unique_name UNIQUE (name)
+);
+
+CREATE TABLE IF NOT EXISTS Events (
+  id UUID NOT NULL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description VARCHAR(800) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  latitude DECIMAL(10, 8) NOT NULL,
+  longitude DECIMAL(11, 8) NOT NULL,
+  start_date TIMESTAMP NOT NULL,
+  end_date TIMESTAMP NOT NULL,
+  icon_img VARCHAR(255) NOT NULL,
+  banner_img VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL,
+  user_id VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Event_Categories (
+  event_id UUID NOT NULL,
+  category_name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (event_id, category_name),
+ 
+  CONSTRAINT fk_event FOREIGN KEY (event_id)
+    REFERENCES Events(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_category FOREIGN KEY (category_name)
+    REFERENCES Categories(name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Tiers (
+  name VARCHAR(50) NOT NULL,
+  color VARCHAR(20) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ 
+  CONSTRAINT pk_tier PRIMARY KEY (name),
+  CONSTRAINT unique_name_color UNIQUE (name, color)
+);
+
+CREATE TABLE IF NOT EXISTS Tickets (
+  id UUID NOT NULL PRIMARY KEY UNIQUE,
+  description VARCHAR(200) NOT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(10, 2) NOT NULL,
+  event_id UUID NOT NULL,
+  tier_name VARCHAR(50) NOT NULL,
+  currency VARCHAR(3) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL,
+  CONSTRAINT fk_event FOREIGN KEY (event_id)
+    REFERENCES Events(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_tier FOREIGN KEY (tier_name)
+    REFERENCES Tiers(name)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Payment (
+  id UUID NOT NULL PRIMARY KEY,
+  amount DECIMAL(10, 2) NOT NULL,
+  payment_method INT NOT NULL,
+  currency VARCHAR(3) NOT NULL,
+  status INT NOT NULL,
+  user_id VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Acquisition (
+  id UUID NOT NULL PRIMARY KEY,
+  ticket_id UUID NOT NULL,
+  user_id VARCHAR(255) NOT NULL,
+  quantity INT NOT NULL,
+  payment_id UUID NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_ticket FOREIGN KEY (ticket_id)
+    REFERENCES Tickets(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT fk_payment FOREIGN KEY (payment_id)
+    REFERENCES Payment(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+

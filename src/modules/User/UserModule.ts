@@ -1,12 +1,46 @@
-import { Module } from '@nestjs/common';
+import { Module, Scope } from '@nestjs/common';
 
-import { UserValidator } from '../../business/validators/UserValidator';
-import { UserServices } from '../../infra/services/UserServices';
+import {
+  UserValidator,
+  IModelValidator,
+  Notifications,
+  User,
+  IServicesUser,
+  IUserValidator,
+} from '@business';
+import { IUserModifier, UserModifier } from '@application';
+
+import { ITokenIsValid, UserServices, TokenIsValid } from '@infra';
 import { UserController } from './UserController';
-import { SignupUser } from '../../application/SignupUser';
 
 @Module({
   controllers: [UserController],
-  providers: [UserValidator, UserServices, SignupUser],
+  providers: [
+    {
+      provide: Notifications,
+      useClass: Notifications,
+      scope: Scope.REQUEST,
+    },
+    {
+      provide: ITokenIsValid,
+      useValue: TokenIsValid,
+    },
+    {
+      provide: IModelValidator,
+      useClass: UserValidator,
+    },
+    {
+      provide: IServicesUser,
+      useClass: UserServices,
+    },
+    {
+      provide: IUserValidator,
+      useClass: UserValidator,
+    },
+    {
+      provide: IUserModifier,
+      useClass: UserModifier,
+    },
+  ],
 })
 export class UserModule {}

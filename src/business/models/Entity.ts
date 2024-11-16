@@ -1,18 +1,40 @@
+import { randomUUID, UUID } from 'crypto';
 import { ENotification, Notifier } from '../../business/entityNotification';
-import { IModelValidator } from '../types/IModelValidator';
+import { Notifications } from '../entityNotification/Notifications';
+import { IModelValidator } from '../interfaces/IModelValidator';
 
-export class Entity extends Notifier {
-  constructor() {
-    super();
+export class Entity<T extends Entity<T>> extends Notifier {
+  public id: string;
+
+  constructor(
+    protected readonly notifications: Notifications,
+    private readonly validator?: IModelValidator<T>,
+    protected readonly _id?: string,
+  ) {
+    super(notifications);
+    this.id = _id ? _id : randomUUID();
   }
 
-  public isValid(validator: IModelValidator) {
-    const { isValid, errors } = validator.validate(this);
+  public isValid(validator: IModelValidator<T>): boolean;
+  public isValid(): boolean;
+  public isValid(validator?: IModelValidator<T>): boolean {
+    const effectiveValidator = validator || this.validator;
 
-    if (!isValid) {
-      this.addNotification(errors.map((error) => new ENotification(error)));
+    if (!effectiveValidator) {
+      this.notifications.push(new ENotification('Validator not found'));
+      return false;
     }
 
-    return !this.hasNotifications();
+    const { isValid, errors } = effectiveValidator.validate(
+      this as unknown as T,
+    );
+
+    if (!isValid) {
+      this.notifications.pushNotifations(
+        errors.map((error) => new ENotification(error)),
+      );
+    }
+
+    return !this.notifications.hasNotifications;
   }
 }
